@@ -77,6 +77,8 @@ export function levelToDb(level: number): number {
   return (low+high)/2;
 }
 export function relativeLevel(current:number,db:number):number {
+  // A zero step preserves feedback exactly, including positions below -60 dB.
+  if(db===0)return current;
   if(current===0)return db>0?dbToLevel(-60):0;
   const goal=levelToDb(current)+db;
   return goal < -60?0:dbToLevel(Math.min(10,goal));

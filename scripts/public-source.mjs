@@ -5,7 +5,7 @@ const files=['.gitattributes','.gitignore','package.json','package-lock.json','t
 const roots=['src','tests','scripts','docs'];
 const plugin='de.local.studiolive-mutes.sdPlugin';
 export async function publicSource() {
-  const selected=[...files,`${plugin}/manifest.json`,`${plugin}/package.json`];
+  const selected=[...files,`${plugin}/manifest.json`,`${plugin}/package.json`,`${plugin}/.sdignore`];
   async function walk(path) {
     for(const entry of await readdir(path,{withFileTypes:true})) {
       const name=`${path}/${entry.name}`;

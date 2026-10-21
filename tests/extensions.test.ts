@@ -19,6 +19,18 @@ async function setup(t:test.TestContext) {
 }
 const request=(db:number,durationMs=0,operation:'set'|'step'|'stop'|'toggle'='set')=>levelRequest(target(),operation,db,durationMs);
 
+test('zero dB steps preserve every confirmed position and send no level writes',async t=>{
+ const {service,mixer}=await setup(t);
+ for(const current of [0,1/65535,0.005,dbToLevel(-60),dbToLevel(-6),dbToLevel(0),1]){
+  mixer.externalParameter('line/ch1/volume',current);
+  for(const duration of [0,100]){
+   await service.executeLevel(request(0,duration,'step'));
+   assert.equal(service.viewTarget(target(),true).level,current);
+   assert.equal(mixer.parameterWrites.length,0);
+  }
+ }
+});
+
 test('toggle fades alternate confirmed endpoints and synchronize duplicate button previews',async t=>{
  const {service,mixer}=await setup(t),controller=new ButtonController(service);t.after(()=>controller.dispose());
  const images=new Map<string,string>();let alerts=0;

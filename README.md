@@ -1,4 +1,4 @@
-# StudioLive Main Mutes 1.6.0
+# StudioLive Main Mutes 1.6.1
 
 A direct Windows Stream Deck plugin for PreSonus StudioLive Series III mixers. Control channel, bus and send mutes, existing mute groups, levels and smooth fades, with confirmed feedback from the mixer. No Companion, DAW, loopMIDI or separate bridge is required.
 
@@ -147,7 +147,7 @@ For local development, enable developer mode with `npx streamdeck dev`, link wit
 
 ## Public repository and releases
 
-The source and installer now use a documentation-only default address. `npm run source:public` produces `release/StudioLive-Mutes-1.5.1-source.zip`, a clean source snapshot suitable for a new public repository. Local research, diagnostics, old releases, generated bundles and personal settings are excluded. See [Publishing on GitHub](docs/PUBLISHING.md) for the upload and release steps.
+The source and installer use a documentation-only default address. `npm run source:public` produces `release/StudioLive-Mutes-1.6.1-source.zip`, a clean source snapshot suitable for a new repository. Local research, diagnostics, old releases, generated bundles and personal settings are excluded. See [Publishing on GitHub](docs/PUBLISHING.md) for the upload and release steps.
 
 The installer, source ZIP and `SHA256SUMS.txt` are generated in `release/`. This directory is ignored by Git; attach the current files to a GitHub Release separately. Older local private installers are not public release assets.
 

@@ -1,6 +1,14 @@
-# Test report — version 1.6.0
+# Test report — version 1.6.1
 
 Current test date: October 21, 2026; settings persistence checks: October 19; historical mixer and color checks: October 16. This report distinguishes automated simulation, installed Stream Deck inspection, read-only hardware checks and user feedback.
+
+## 1.6.1: source review and zero-step regression
+
+The source review reproduced a relative 0 dB step moving a confirmed normalized position of 0.005 to the floor. The shared relative-level helper now returns the confirmed position immediately for a zero step, including values below the regular −60 dB target range. The new service regression checks floor, low nonzero, regular, unity and top positions with instant and timed operations, requiring unchanged feedback and zero simulated level writes. The label regression also checks FADE -- for low nonzero positions. Both regressions failed before the fix.
+
+The README's stale source-archive version and the publication guide were updated. No real mixer commands or Stream Deck application restarts are part of this source review.
+
+Type checking and all 58 tests passed under development Node.js 22.23.2 and the installed Stream Deck Node.js 20.20.2. Official Elgato validation and source/runtime publication checks passed. A full npm audit reported zero known vulnerabilities, including development dependencies. The installer, source archive and SHA-256 checksums were regenerated for 1.6.1. The CLI's `.sdignore` packaging rules are included in the source inventory so logs remain excluded in fresh checkouts.
 
 ## 1.6.0: custom colors and tinted inactive fades
 

@@ -28,6 +28,7 @@ test('reached targets show FADE -- within confirmation tolerance, retaining dire
 });
 
 test('no-op detection includes floor/top relative bounds but excludes active work, instant changes and toggles',()=>{
+ for(const current of [1/65535,0.005])assert.equal(levelLabel(step(0),current).label,'FADE --');
  for(const request of [fixed(-84),step(-1),step(0)])assert.equal(levelLabel(request,0).inactive,true);
  assert.equal(levelLabel(step(1),1).label,'FADE --');
  assert.equal(levelLabel(fixed(0),dbToLevel(0),undefined,0,true).inactive,undefined);

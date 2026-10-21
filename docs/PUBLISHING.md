@@ -2,9 +2,9 @@
 
 ## Prepare a clean repository
 
-Use the current `StudioLive-Mutes-1.6.0-source.zip` from `release/`, or regenerate it with the commands in the README. Extract its contents into a new folder. It contains the maintained source, English documentation, pinned dependency lockfile, plugin assets and MIT notices. It does not contain a `.git` directory, personal settings, historical private packages, local research or diagnostics.
+Use the current `StudioLive-Mutes-1.6.1-source.zip` from `release/`, or regenerate it with the commands in the README. Extract its contents into a new folder. It contains the maintained source, English documentation, pinned dependency lockfile, plugin assets and MIT notices. It does not contain a `.git` directory, personal settings, historical private packages, local research or diagnostics.
 
-Create a public repository on GitHub with a name of your choice, then upload the extracted contents or push them with Git. The snapshot already includes a README, MIT license, `.gitignore` and `.gitattributes`; a second generated license is unnecessary. This preparation does not create a repository or publish anything to your account.
+Create a repository on GitHub with a name of your choice and the desired visibility, then upload the extracted contents or push them with Git. The snapshot already includes a README, MIT license, `.gitignore` and `.gitattributes`; a second generated license is unnecessary. Generating the source snapshot does not create a repository or publish anything to your account.
 
 The original development workspace may contain ignored private files and older private installers. Use the clean source snapshot for the initial upload. Do not attach historical private ZIPs or installers to the public repository or a release.
 
@@ -29,10 +29,10 @@ npm run checksums
 
 ## Create a release
 
-Create a tag such as `v1.6.0`, write release notes from `CHANGELOG.md`, and attach only:
+Create a tag such as `v1.6.1`, write release notes from `CHANGELOG.md`, and attach only:
 
 - `de.local.studiolive-mutes.streamDeckPlugin`
-- `StudioLive-Mutes-1.6.0-source.zip`
+- `StudioLive-Mutes-1.6.1-source.zip`
 - `SHA256SUMS.txt`
 
 Keep the compatibility and testing scope from `TEST-REPORT.md` clear in the release description. Users must enter their own mixer address after installing. Release files and generated plugin bundles are intentionally ignored by Git.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+- Keep a relative 0 dB step unchanged at every confirmed fader position, including values below −60 dB; no level command is sent.
+- Apply the same no-op behavior to inactive fade labels, add simulator coverage and correct the documented source archive version.
+
 ## 1.6.0
 
 - Custom button colors for mute/group/send and level/fade actions, stored independently per button; switch back to automatic mixer color at any time.

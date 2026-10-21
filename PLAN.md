@@ -48,3 +48,7 @@ Version 1.5.3 makes the entire inactive button light gray, including all text, i
 ## Custom colors and inactive tints
 
 Version 1.6.0 adds per-button automatic/custom colors to both action types. Custom normal colors retain red mute and gray unknown/offline priority; inactive fades blend the current color with white. Validated preferences are display-only and never write mixer colors. Updated English documentation, inspector and color regressions, with 57 automated tests under both runtimes.
+
+## GitHub source review
+
+Version 1.6.1 fixes relative zero steps below the regular −60 dB target range, preserving exact confirmed positions without sending writes. The new service regression and extended label check failed before the fix. Type checking, all 58 tests under both runtimes, Elgato validation, publication checks and a full npm audit passed. Corrected the README source-archive version and retained the CLI packaging ignore rules in source exports. Created a local Git history from the clean publication inventory; private working files remain excluded.
