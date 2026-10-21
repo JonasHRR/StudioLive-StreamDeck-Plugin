@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "de.local.studiolive-mutes",
+  "Name": "StudioLive Main Mutes",
+  "Version": "1.6.0.0",
+  "Author": "StudioLive Mutes",
+  "Description": "Mixer names and colors, channel/bus/send mutes, mute groups, levels and smooth fades with confirmed feedback.",
+  "Category": "StudioLive Main Mutes",
+  "CategoryIcon": "imgs/category",
+  "Icon": "imgs/plugin",
+  "CodePath": "bin/plugin.js",
+  "SDKVersion": 3,
+  "Software": {
+    "MinimumVersion": "7.1"
+  },
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Nodejs": {
+    "Version": "20"
+  },
+  "Actions": [
+    {
+      "UUID": "de.local.studiolive-mutes.channel",
+      "Name": "Mute / Group / Send",
+      "Tooltip": "Channel, bus, group or send mute with confirmed state.",
+      "Icon": "imgs/action",
+      "PropertyInspectorPath": "ui/settings.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "States": [
+        {
+          "Image": "imgs/key",
+          "TitleAlignment": "middle"
+        }
+      ]
+    },
+    {
+      "UUID": "de.local.studiolive-mutes.level",
+      "Name": "Level / Fade",
+      "Tooltip": "Set levels, make relative changes, fade smoothly or stop a fade. dB values are approximate.",
+      "Icon": "imgs/action",
+      "PropertyInspectorPath": "ui/settings.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "SupportedInMultiActions": true,
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "States": [
+        {
+          "Image": "imgs/key",
+          "TitleAlignment": "middle"
+        }
+      ]
+    }
+  ]
+}

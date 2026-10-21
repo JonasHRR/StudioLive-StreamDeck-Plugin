@@ -1,0 +1,31 @@
+{
+  "name": "studiolive-streamdeck-mutes",
+  "version": "1.6.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.23.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node scripts/notices.mjs && node scripts/build.mjs",
+    "test": "npm run build && node --test build/tests/*.test.js",
+    "diagnose": "node build/diagnose.js",
+    "validate": "streamdeck validate de.local.studiolive-mutes.sdPlugin",
+    "pack": "streamdeck pack de.local.studiolive-mutes.sdPlugin --output release --force --no-update-check",
+    "source:public": "node scripts/export-source.mjs",
+    "check:public": "node scripts/check-public.mjs",
+    "checksums": "node scripts/checksums.mjs"
+  },
+  "dependencies": {
+    "@elgato/streamdeck": "3.0.2"
+  },
+  "devDependencies": {
+    "@featherbear/presonus-studiolive-api": "1.9.1",
+    "@elgato/cli": "1.10.2",
+    "@types/node": "22.19.15",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
+  }
+}

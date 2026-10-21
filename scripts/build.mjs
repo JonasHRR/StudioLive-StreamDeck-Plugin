@@ -1,0 +1,23 @@
+import { build } from 'esbuild';
+import { mkdir, copyFile, rm } from 'node:fs/promises';
+import { globSync } from 'node:fs';
+const plugin = 'de.local.studiolive-mutes.sdPlugin';
+await mkdir(`${plugin}/bin`, {recursive:true});
+const common = {bundle:true, platform:'node', format:'esm', target:'node20', banner:{js:"import { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);"}, logLevel:'info'};
+await build({...common, entryPoints:['src/plugin.ts'], outfile:`${plugin}/bin/plugin.js`});
+await build({...common, entryPoints:['src/diagnose.ts'], outfile:'build/diagnose.js'});
+await build({...common, entryPoints:['src/defaults.ts'], outfile:'build/defaults.js'});
+await build({...common, entryPoints:globSync('tests/*.test.ts'), outdir:'build/tests'});
+await import('./assets.mjs');
+await copyFile('LICENSE', `${plugin}/LICENSE`);
+await copyFile('THIRD_PARTY_NOTICES.md', `${plugin}/THIRD_PARTY_NOTICES.md`);
+await copyFile('README.md', `${plugin}/README.md`);
+await copyFile('CHANGELOG.md', `${plugin}/CHANGELOG.md`);
+await copyFile('TEST-REPORT.md', `${plugin}/TEST-REPORT.md`);
+await mkdir(`${plugin}/docs`, {recursive:true});
+await copyFile('docs/ARCHITECTURE.md', `${plugin}/docs/ARCHITECTURE.md`);
+await copyFile('docs/ARCHITECTURE-1.0.md', `${plugin}/docs/ARCHITECTURE-1.0.md`);
+await copyFile('docs/TEST-REPORT-1.0.md', `${plugin}/docs/TEST-REPORT-1.0.md`);
+await copyFile('docs/PUBLISHING.md', `${plugin}/docs/PUBLISHING.md`);
+// Remove only obsolete generated documentation from earlier builds.
+for(const file of ['ANLEITUNG.md','PRUEFBERICHT.md','docs/ARCHITEKTUR.md','docs/ARCHITEKTUR-1.0.md','docs/PRUEFBERICHT-1.0.md']) await rm(`${plugin}/${file}`,{force:true});

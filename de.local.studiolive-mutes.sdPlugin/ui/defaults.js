@@ -1,0 +1,1 @@
+window.STUDIOLIVE_DEFAULT_IP = "192.0.2.1";

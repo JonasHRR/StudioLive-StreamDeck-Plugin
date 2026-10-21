@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>StudioLive Main Mutes</title>
+<style>
+:root{color-scheme:dark;font-family:'Segoe UI',Arial,sans-serif;font-size:13px}body{margin:14px;background:#2d2d2d;color:#eee}h1{font-size:17px;margin:0 0 14px}label{display:block;margin-top:12px;font-weight:600}input,select,button{box-sizing:border-box;width:100%;margin-top:5px;padding:8px;border:1px solid #666;border-radius:5px;background:#3d3d3d;color:#fff}button{cursor:pointer;background:#06685c;font-weight:600}button:disabled{opacity:.5;cursor:default}small{display:block;color:#c6c6c6;margin-top:5px;line-height:1.5}p{line-height:1.5}.panel{border-top:1px solid #555;margin-top:16px;padding-top:3px}#message{min-height:20px;color:#ffd47a}#connection{color:#bbb}
+[hidden]{display:none!important}
+</style></head><body>
+<h1 id="heading">StudioLive · Controls</h1>
+<label for="target">Target type</label><select id="target" disabled></select>
+<label for="channel">Channel / Bus / Group</label><select id="channel" disabled></select>
+<div id="sendRow" hidden><label for="mix">Destination Aux / FX</label><select id="mix" disabled></select></div>
+<label for="colorMode">Button color</label><select id="colorMode" disabled><option value="auto">Mixer color (automatic)</option><option value="custom">Custom color</option></select>
+<div id="colorRow" hidden><label for="customColor">Custom button color</label><input id="customColor" type="color" value="#174e89" style="height:36px;padding:3px" disabled></div>
+<small>Custom color replaces the normal mixer color on this button. MUTE stays red; unknown/offline stays gray. FADE -- lightens the current button color with white. Mixer colors are never changed.</small>
+<div id="muteFields"><label for="mode">Operation</label><select id="mode" disabled><option value="toggle">Toggle mute</option><option value="on">Mute on</option><option value="off">Mute off</option></select>
+<small>For Multi-Actions, choose “Mute on” or “Mute off”. Mute groups use the existing mixer assignments.</small></div>
+<div id="levelFields" hidden><label for="operation">Level action</label><select id="operation" disabled><option value="set">Set fixed level / Fade</option><option value="step">Adjust level relatively</option><option value="toggle">Toggle fade −∞ / 0 dB</option><option value="stop">Stop current fade</option></select>
+<div id="levelValues"><label for="db" id="dbLabel">Target level (≈ dB)</label><input id="db" type="number" min="-84" max="10" step="0.1" value="0" disabled>
+<div id="floorRow" hidden><label><input id="floor" type="checkbox" style="width:auto;margin-right:7px" disabled>Target −∞ (fader floor · stored as −84)</label></div>
+<small id="toggleHelp" hidden>Each press switches between −∞ and 0 dB. At the floor, the next press fades in; otherwise it fades out. Press again during a fade to reverse it. The button shows the next press: FADE OUT or FADE IN. Both directions use the duration below; selecting this action starts with 3 s if the duration was 0.</small>
+<label for="duration">Transition duration in seconds</label><input id="duration" type="number" min="0" max="60" step="0.1" value="0" disabled>
+<small>0 = instant · up to 60 s = smooth fade. Target −60 to +10 dB; −84 = fader floor. dB values are approximate. The first positive step from the floor starts at ≈ −60 dB.</small>
+<small>Toggle fade alone uses FADE OUT / FADE IN for the next press. Fixed targets (including −∞ and 0 dB) use FADE UP / DOWN from the current level; relative steps use UP / DOWN by sign.</small></div>
+<small>A fade that would leave the confirmed level unchanged shows FADE -- with a lighter tint of its button color and gray text. Moving away from the goal restores the direction and normal color. Toggle fade keeps its next-press preview.</small>
+<small>Another level command or a detected external fader move stops the fade. Stopping a fade sends no level value. Mute is independent.</small></div>
+<label><input id="autoName" type="checkbox" checked style="width:auto;margin-right:7px" disabled>Use mixer names automatically</label>
+<label for="name">Custom display name (overrides mixer name)</label><input id="name" maxlength="14" placeholder="e.g. Vocals" disabled>
+<div class="panel"><label for="ip">Shared mixer IP · all buttons</label><input id="ip" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Enter your mixer IPv4 address" disabled>
+<button id="save" disabled>Save mixer IP for all buttons</button><small>The address is saved on this computer for all buttons and restored after restart. One TCP connection, port 53000. Changing the address discards pending commands.</small></div>
+<p id="message" role="status"></p><p id="connection">Loading settings …</p>
+<small>Mixer color: normal background · Red: MUTE · Gray: Unknown state. Text adjusts to light/dark colors. Without a mixer color, OPEN uses green and level actions use blue. WAIT/FADE indicates pending changes. UNKNOWN means the target has not provided a valid state; no command is sent. OPEN does not describe other signal paths or mute causes. Link Aux Mutes can affect additional paths.</small>
+<script src="defaults.js"></script><script src="settings.js"></script></body></html>
