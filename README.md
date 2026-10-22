@@ -8,9 +8,9 @@ StudioLive Control is a Stream Deck plugin for PreSonus StudioLive Series III mi
 
 ## Screenshot
 
-<img src="docs/images/studiolive-control.png" width="520" alt="Stream Deck showing StudioLive mute, level and fade buttons with mixer colors, plus the button settings panel.">
+<img src="docs/images/studiolive-control.jpg" width="520" alt="Stream Deck showing StudioLive mute, level and fade buttons with mixer colors, plus the button settings panel.">
 
-Example layout with input, bus, mute-group, Tape and Talkback controls. The screenshot shows the earlier **StudioLive Main Mutes** category name; the current name is **StudioLive Control**.
+Example layout with input, bus, mute-group, Tape and Talkback controls.
 
 ## Features
 

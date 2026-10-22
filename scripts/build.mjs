@@ -23,6 +23,7 @@ await copyFile('docs/USER-GUIDE.md', `${plugin}/docs/USER-GUIDE.md`);
 await copyFile('docs/MACOS-TEST.md', `${plugin}/docs/MACOS-TEST.md`);
 await copyFile('docs/RELEASE-1.0.0.md', `${plugin}/docs/RELEASE-1.0.0.md`);
 await mkdir(`${plugin}/docs/images`, {recursive:true});
-await copyFile('docs/images/studiolive-control.png', `${plugin}/docs/images/studiolive-control.png`);
+await copyFile('docs/images/studiolive-control.jpg', `${plugin}/docs/images/studiolive-control.jpg`);
+await rm(`${plugin}/docs/images/studiolive-control.png`, {force:true});
 // Remove only obsolete generated documentation from earlier builds.
 for(const file of ['ANLEITUNG.md','PRUEFBERICHT.md','docs/ARCHITEKTUR.md','docs/ARCHITEKTUR-1.0.md','docs/PRUEFBERICHT-1.0.md']) await rm(`${plugin}/${file}`,{force:true});
