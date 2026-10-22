@@ -20,5 +20,7 @@ await copyFile('docs/ARCHITECTURE-1.0.md', `${plugin}/docs/ARCHITECTURE-1.0.md`)
 await copyFile('docs/TEST-REPORT-1.0.md', `${plugin}/docs/TEST-REPORT-1.0.md`);
 await copyFile('docs/PUBLISHING.md', `${plugin}/docs/PUBLISHING.md`);
 await copyFile('docs/USER-GUIDE.md', `${plugin}/docs/USER-GUIDE.md`);
+await mkdir(`${plugin}/docs/images`, {recursive:true});
+await copyFile('docs/images/studiolive-control.png', `${plugin}/docs/images/studiolive-control.png`);
 // Remove only obsolete generated documentation from earlier builds.
 for(const file of ['ANLEITUNG.md','PRUEFBERICHT.md','docs/ARCHITEKTUR.md','docs/ARCHITEKTUR-1.0.md','docs/PRUEFBERICHT-1.0.md']) await rm(`${plugin}/${file}`,{force:true});

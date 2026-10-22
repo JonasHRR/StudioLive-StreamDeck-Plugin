@@ -68,3 +68,7 @@ Version 1.9.0 adds A1/A2 stereo Aux inputs, Tape and Talkback with own mute/leve
 ## Grouped additional inputs — October 22, 2026
 
 Version 1.9.1 groups A1/A2, Tape and Talkback under Additional inputs in both action inspectors and renames Aux / FlexMix bus to Mix bus. Existing stored kinds/channel numbers remain unchanged. Updated inspector coverage verifies saved assignments, names and selection retention; control behavior remains covered by the existing simulator tests. Updated English documentation and release files.
+
+## Compact inspector help — October 22, 2026
+
+Version 1.9.3 reduces the inspector descriptions to brief hints and points to the existing User Guide for details. Controls, settings and mixer behavior are unchanged. Rebuilt and validated the release files.

@@ -1,4 +1,4 @@
-# Test report — version 1.9.2
+# Test report — version 1.9.3
 
 Checked on October 22, 2026. Start with the summary below for the current scope; the version notes preserve earlier observations and explain how coverage grew.
 
@@ -15,6 +15,10 @@ Checked on October 22, 2026. Start with the summary below for the current scope;
 Hardware observations used a StudioLive 24 Series III reporting firmware 3.4.0.111374. The user reported working controls; automated write tests use simulators. Earlier 24-channel counts reflect the old decoder's limit, not the mixer's full logical input count.
 
 For day-to-day setup, see the [user guide](docs/USER-GUIDE.md). The sections below are the verification record, including historical behavior that later versions changed.
+
+## 1.9.3: compact inspector help
+
+Inspector help now uses short, task-focused hints and points to the User Guide for full instructions. Long descriptions of target ranges, color priorities, fade labels and connection behavior remain in the guide. The infinity checkbox no longer displays its internal storage value in its label. Controls, settings, defaults and mixer behavior are unchanged. Type checking, the existing 74 tests under development Node.js 22 and Stream Deck Node.js 20.20.2, official validation and public-file checks passed. Release files were regenerated.
 
 ## 1.9.2: StudioLive Control presentation
 

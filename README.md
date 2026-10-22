@@ -1,30 +1,20 @@
 # StudioLive Control
 
-**Your mixer. Your workflow.**
+StudioLive Control is a Windows Stream Deck plugin for PreSonus StudioLive Series III mixers. It provides direct control of levels, fades, mutes and sends, with live state, names and colors from the mixer.
 
-Bring the controls you use most to your Stream Deck. StudioLive Control connects directly to your PreSonus StudioLive Series III mixer, so you can adjust your mix from the buttons in front of you.
+The project is MIT licensed. You can use, modify and redistribute it under the terms of the [license](LICENSE).
 
-Adjust levels, shape fades and keep Talkback within reach. Build a layout around the way you work.
-
-**Windows · Stream Deck 7.1+ · Version 1.9.2**
+**Windows · Stream Deck 7.1+ · Version 1.9.3**
 
 [Get started](#get-connected) · [User guide](docs/USER-GUIDE.md) · [Changelog](CHANGELOG.md)
 
-## Control that fits your session
+## Screenshot
 
-### The right controls, within reach
+<img src="docs/images/studiolive-control.png" width="520" alt="Stream Deck showing StudioLive mute, level and fade buttons with mixer colors, plus the button settings panel.">
 
-Set levels, make small adjustments, run smooth fades or switch mutes. Work with inputs, buses, FX returns and existing mute groups. A1, A2, Tape and Talkback sit together under **Additional inputs**.
+Example layout with input, bus, mute-group, Tape and Talkback controls. The screenshot shows the earlier **StudioLive Main Mutes** category name; the current name is **StudioLive Control**.
 
-### A clear view of your mix
-
-Buttons follow the mixer's feedback. Channel names help you find the right input, mixer colors keep the layout familiar, and custom names and colors let you make it your own.
-
-### One direct connection
-
-The plugin talks to your mixer over its control network. Save its address once and use it across your buttons, folders and profiles. No extra bridge application is needed.
-
-## Available today
+## Features
 
 | Control | What you can do |
 |---|---|
@@ -35,11 +25,11 @@ The plugin talks to your mixer over its control network. Save its address once a
 
 Available controls depend on the state your mixer provides. A target without valid feedback stays **UNKNOWN**. Find the exact ranges and behavior in the [user guide](docs/USER-GUIDE.md).
 
-## More to come
+The plugin connects directly over the mixer's control network. The saved mixer address is shared across all buttons, folders and profiles; no separate bridge application is required.
 
-More mixer functions will follow. The focus stays the same: useful controls, clear feedback and a workflow that feels natural.
+## Development
 
-The table above reflects what's available now. Follow the [changelog](CHANGELOG.md) as the plugin develops.
+Additional mixer functions are planned. The table above lists the currently implemented controls; changes are recorded in the [changelog](CHANGELOG.md).
 
 ## Get connected
 
@@ -48,7 +38,7 @@ You'll need **Windows 10 or 11**, **Stream Deck 7.1 or later**, and a mixer reac
 1. Install `de.local.studiolive-mutes.streamDeckPlugin` with Stream Deck running. Use a release asset if available, or [build it yourself](docs/PUBLISHING.md).
 2. Add **Mute / Group / Send** or **Level / Fade** from the **StudioLive Control** category.
 3. Enter your mixer IPv4 address and click **Save mixer IP for all buttons**. Wait for the save confirmation.
-4. Choose a target and operation. You're ready to build your layout.
+4. Choose a target and operation for the button.
 
 Your address is remembered on this Windows account. Existing profiles and button assignments remain compatible.
 
@@ -60,7 +50,7 @@ Read-only hardware checks used a **StudioLive 24 Series III** reporting **32 log
 
 This is an independent, unofficial project and is not affiliated with PreSonus or Elgato.
 
-## Go further
+## Documentation
 
 - [User guide](docs/USER-GUIDE.md) — setup, controls, colors and troubleshooting.
 - [Build & publish](docs/PUBLISHING.md) — create an installer from source.

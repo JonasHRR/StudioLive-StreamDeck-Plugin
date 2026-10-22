@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.3
+
+- Use a factual project introduction and add a Stream Deck screenshot to the README.
+- Shorten inspector help to brief hints for target feedback, colors, Multi-Actions, fade duration and shared settings.
+- Keep detailed explanations in the User Guide; simplify the infinity checkbox label.
+
 ## 1.9.2
 
 - Introduce StudioLive Control as the product and Stream Deck category name, reflecting levels, fades, mutes and sends in one mixer-control toolkit.
