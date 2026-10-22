@@ -24,6 +24,8 @@ The project uses Elgato SDK 3.0.2 and CLI 1.10.2. Development requires Node.js 2
 
 The transport connects to the configured IPv4 address on **TCP 53000**. It becomes ready only after both a subscription acknowledgment and a complete initial snapshot.
 
+The current TCP batch is fully applied before the initial snapshot is handed to the service. Incremental feedback arriving alongside the snapshot is included, so the first command uses the latest received state.
+
 Snapshots carry the highest declared regular input node as `inputCount`. Both transport and service require a contiguous bank of **16, 24, 32 or 64** valid input mute states. A missing final mute cannot silently turn a declared 64-input bank into a smaller model. Snapshot copies preserve that metadata; older simulator snapshots without it infer the count from the map.
 
 Other targets are optional. Each one needs its own valid feedback before a command can be accepted. Names and colors alone don't make a target controllable.

@@ -17,7 +17,7 @@ export function syncState(muteChannel = 2,inputCount=24): Buffer {
   const talkback={children:{ch1:{values:{mute:1,volume:0.5,username:'',name:'Talkback',color:0xff332211n}}}};
   return deflateSync(ub({id:'Synchronize',children:{line:{children:channels},return:returns,talkback,main:bus,sub:bus,aux:bus,fxbus:bus,fxreturn:bus,mutegroup:{values:{mutegroup1:0,mutegroup1username:'Band'}}}}));
 }
-export async function tcpMixer(options: {chunked?:boolean; silence?:boolean; echo?:boolean; port?:number; channels?:number} = {}) {
+export async function tcpMixer(options: {chunked?:boolean; silence?:boolean; echo?:boolean; port?:number; channels?:number; initialFrames?:Buffer[]} = {}) {
   const sockets = new Set<Socket>(); const writes: Buffer[] = []; const controls: Buffer[] = [];
   const server = createServer(socket => {
     sockets.add(socket); socket.on('error',()=>{}); socket.on('close',()=>sockets.delete(socket));
@@ -25,6 +25,7 @@ export async function tcpMixer(options: {chunked?:boolean; silence?:boolean; ech
     socket.on('data', data => framer.feed(data,(code,payload) => {
       writes.push(packet(code,payload));
       if (code === 'JM' && JSON.parse(payload.subarray(4).toString()).id === 'Subscribe' && !options.silence) {
+        if(options.initialFrames) {socket.write(Buffer.concat(options.initialFrames));return;}
         socket.write(jsonPacket({id:'SubscriptionReply'}));
         const compressed = syncState(2,options.channels ?? 24);
         if (options.chunked) {

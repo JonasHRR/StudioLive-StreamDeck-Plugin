@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Framer, decodeState, decodeMute, mutePacket, packet } from '../src/protocol.js';
+import { Framer, decodeState, decodeMute, mutePacket, packet, parameterPacket, jsonPacket } from '../src/protocol.js';
 import { decodeUBJSON } from '../src/ubjson.js';
 import { StudioLiveTransport } from '../src/studiolive.js';
+import { MixerService } from '../src/mixer-service.js';
+import { target } from '../src/controls.js';
 import { tcpMixer, syncState } from './protocol-fixture.js';
 import { until } from './simulator.js';
 
@@ -22,6 +24,26 @@ test('framing accepts every byte boundary and coalesced packets; bad headers fai
 });
 test('snapshot decoding requires Synchronize and extracts 24 distinct channel mutes', () => {
   const states = decodeState(syncState(24)); assert.equal(states.size,24); assert.equal(states.get(24),true); assert.equal(states.get(1),false);
+});
+for(const subscriptionLast of [false,true]) test(`startup feedback in the snapshot TCP batch reaches the service (subscription ${subscriptionLast?'last':'first'})`,async t=>{
+  const subscription=jsonPacket({id:'SubscriptionReply'});
+  const initial=[
+    packet('ZB',Buffer.concat([Buffer.alloc(4),syncState()])),
+    mutePacket(1,true),
+    parameterPacket('line/ch1/volume',0.25),
+    packet('PS',Buffer.from('line/ch1/username\0\0\0Current name\0')),
+    packet('PC',Buffer.concat([Buffer.from('line/ch1/color\0\0\0'),Buffer.from([51,102,153,255])]))
+  ];
+  const fixture=await tcpMixer({initialFrames:subscriptionLast?[...initial,subscription]:[subscription,...initial]});t.after(()=>fixture.close());
+  const service=new MixerService(()=>new StudioLiveTransport(500,fixture.port));t.after(()=>service.stop());
+  service.configure('127.0.0.1');await until(()=>service.status==='online');
+  assert.equal(service.view(1).muted,true);
+  assert.equal(service.viewTarget(target(),true).level,0.25);
+  assert.equal(service.view(1).name,'Current name');
+  assert.equal(service.view(1).color,'#336699');
+  await service.execute(1,'toggle');
+  assert.equal(fixture.controls.length,1);
+  assert.deepEqual(decodeMute(fixture.controls[0]),{channel:1,muted:false});
 });
 for (const chunked of [false,true]) test(`real TCP adapter against simulated mixer (${chunked?'CK chunks':'ZB state'})`, async t => {
   const fixture = await tcpMixer({chunked}); t.after(()=>fixture.close());

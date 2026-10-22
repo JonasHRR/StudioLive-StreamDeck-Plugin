@@ -52,7 +52,6 @@ export class StudioLiveTransport implements MixerTransport {
         if (!hasCompleteInputState(next)) throw new Error('Incomplete mixer state.');
         values = next;
         if (this.ready) events.snapshot(copySnapshot(next));
-        tryReady();
       };
       socket.on('data', data => {
         try {
@@ -61,7 +60,7 @@ export class StudioLiveTransport implements MixerTransport {
             if (code === 'JM') {
               if (payload.length < 4) throw new Error('Incomplete JSON packet.');
               const message = JSON.parse(payload.subarray(4).toString());
-              if (message.id === 'SubscriptionReply') { subscribed = true; tryReady(); }
+              if (message.id === 'SubscriptionReply') subscribed = true;
             } else if (code === 'ZB') {
               synchronize(payload.subarray(4));
             } else if (code === 'CK') {
@@ -88,6 +87,9 @@ export class StudioLiveTransport implements MixerTransport {
               if (outstanding.delete(id)) { lastReply = Date.now(); }
             }
           });
+          // Include coalesced startup updates before open resolves. The service
+          // cannot consume live callbacks until its initial snapshot is adopted.
+          tryReady();
         } catch { fail('Invalid or incompatible protocol data.'); }
       });
       socket.on('error', () => fail('TCP connection failed.'));

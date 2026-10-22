@@ -4,11 +4,12 @@ Recorded on October 22, 2026. This report summarizes the verification available 
 
 ## Automated checks
 
-The suite contains **79 tests**, executed on Windows under **Node.js 22.23.2** and **Stream Deck Node.js 20.20.2**. All passed. Type checking, the build, Elgato manifest validation and source/runtime publication checks also passed.
+The suite contains **81 tests**, executed on Windows under **Node.js 22.23.2** and **Stream Deck Node.js 20.20.2**. All passed. Type checking, the build, Elgato manifest validation and source/runtime publication checks also passed.
 
 Tests use local mixer and Stream Deck simulators. They cover:
 
 - Packet framing, bounded snapshot decoding, parameter feedback and allowed write paths.
+- Startup feedback coalesced with the initial snapshot, with subscription acknowledgment before or after the data, and the first command using the latest confirmed state.
 - Complete 16-, 24-, 32- and 64-input banks, unavailable targets and high-channel feedback.
 - Input/bus/group/send mutes, send-assignment inversion and additional input mappings.
 - Fixed and relative levels, unity conversion, zero steps, fades, toggle reversal, cancellation and confirmation timeouts.
