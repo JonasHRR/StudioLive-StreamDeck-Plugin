@@ -73,6 +73,8 @@ For additional inputs, the supported fields are mute, volume, username, name and
 
 ## Levels, fades and labels
 
+`src/defaults.ts` defines the default level operation (toggle) and transition (3 seconds). The build emits the same defaults for the property inspector. A level button with no saved operation uses these defaults in both rendering and key execution, even before its inspector opens. Explicit saved operations and durations, including zero, retain their existing behavior.
+
 The approximate dB curve comes from Andrew Wong's MIT-licensed reference implementation. Fixed targets span **−60 to +10 dB**, with **−84** representing the floor. Relative steps span **±12 dB**. A positive step from the floor starts near −60 dB; a nonzero step below that range goes to the floor. A zero step returns the exact confirmed position.
 
 Unity is anchored at **191/256 = 0.74609375**, from a read-only StudioLive 24 snapshot after the user confirmed 0 dB on the console. Its Float32 wire bytes are `00 00 3f 3f`. The empirical curve is scaled continuously on either side of that point and inverted with the same correction. Other levels and models remain approximate. Display rounding avoids −0.0 dB around unity.
@@ -104,13 +106,16 @@ The renderer uses validated custom colors first, then mixer colors, then green/b
 
 ## Settings that survive a restart
 
-The durable address file is:
+The durable address file is selected by the host platform:
 
 ```text
-%LOCALAPPDATA%\StudioLive-StreamDeck-Plugin\mixer-settings.json
+Windows: %LOCALAPPDATA%\StudioLive-StreamDeck-Plugin\mixer-settings.json
+macOS:   ~/Library/Application Support/StudioLive-StreamDeck-Plugin/mixer-settings.json
 ```
 
 It contains only `{version, ip}`. Writes use a temporary sibling, flush and rename, and an explicit save is acknowledged only after readback. Reads and writes are serialized. A usable local file takes precedence at startup; a missing or corrupt file can migrate a valid SDK global address.
+
+Both platforms use the same JavaScript bundle and Stream Deck-provided Node.js 20 runtime. The application code uses no native add-ons or Windows shell commands. Version 1.0.0 declares macOS from version 13. The user reported the preceding macOS test build working on their MacBook; exact OS/chip details and separate Intel/Apple Silicon acceptance were not supplied.
 
 SDK globals remain a compatibility mirror, with reads bounded to two seconds. Empty or example-address events don't erase a known working address. `192.0.2.1` is a documentation placeholder, never an automatic saved connection.
 

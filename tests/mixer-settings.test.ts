@@ -4,7 +4,22 @@ import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {MixerSettings,type MixerSettingsHost} from '../src/mixer-settings.js';
-import {FileMixerAddressStore} from '../src/mixer-address-store.js';
+import {FileMixerAddressStore,mixerAddressFile} from '../src/mixer-address-store.js';
+
+test('Windows mixer address retains LOCALAPPDATA and the existing home fallback',()=>{
+ assert.equal(mixerAddressFile('win32','C:\\TestHome',{LOCALAPPDATA:'D:\\LocalData'}),'D:\\LocalData\\StudioLive-StreamDeck-Plugin\\mixer-settings.json');
+ assert.equal(mixerAddressFile('win32','C:\\TestHome',{}),'C:\\TestHome\\AppData\\Local\\StudioLive-StreamDeck-Plugin\\mixer-settings.json');
+});
+test('macOS mixer address uses Application Support regardless of LOCALAPPDATA',()=>{
+ assert.equal(mixerAddressFile('darwin','/Users/Test Person',{LOCALAPPDATA:'D:\\LocalData'}),'/Users/Test Person/Library/Application Support/StudioLive-StreamDeck-Plugin/mixer-settings.json');
+ assert.equal(mixerAddressFile('darwin','/Users/Jörg',{}),'/Users/Jörg/Library/Application Support/StudioLive-StreamDeck-Plugin/mixer-settings.json');
+});
+test('macOS-style settings path creates directories, replaces a saved address and survives restart',async t=>{
+ const directory=await mkdtemp(join(tmpdir(),'studiolive-mac-settings-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+ const path=join(directory,'Test Person','Library','Application Support','StudioLive-StreamDeck-Plugin','mixer-settings.json');
+ const disk=new FileMixerAddressStore(path);await disk.write('192.0.2.2');await disk.write('192.0.2.3');
+ assert.equal(await new FileMixerAddressStore(path).read(),'192.0.2.3');
+});
 
 async function store(t:test.TestContext){const directory=await mkdtemp(join(tmpdir(),'studiolive-settings-'));t.after(()=>rm(directory,{recursive:true,force:true}));const path=join(directory,'mixer-settings.json');return {path,store:new FileMixerAddressStore(path)};}
 test('migrate an existing SDK address once and recover it on restart without reading broken SDK settings',async t=>{

@@ -1,11 +1,13 @@
 import {mkdir,open,readFile,rename,rm,stat} from 'node:fs/promises';
-import {dirname,join} from 'node:path';
+import {dirname,posix,win32} from 'node:path';
 import {homedir} from 'node:os';
 import {randomUUID} from 'node:crypto';
 import type {MixerAddressStore} from './mixer-settings.js';
 
-export function mixerAddressFile():string {
-  return join(process.env.LOCALAPPDATA ?? join(homedir(),'AppData','Local'),'StudioLive-StreamDeck-Plugin','mixer-settings.json');
+export function mixerAddressFile(platform:NodeJS.Platform=process.platform,home=homedir(),environment:Partial<Pick<NodeJS.ProcessEnv,'LOCALAPPDATA'>>=process.env):string {
+  if(platform==='darwin') return posix.join(home,'Library','Application Support','StudioLive-StreamDeck-Plugin','mixer-settings.json');
+  const path=platform==='win32'?win32:posix;
+  return path.join(environment.LOCALAPPDATA ?? path.join(home,'AppData','Local'),'StudioLive-StreamDeck-Plugin','mixer-settings.json');
 }
 export class FileMixerAddressStore implements MixerAddressStore {
   constructor(private readonly path=mixerAddressFile()){}

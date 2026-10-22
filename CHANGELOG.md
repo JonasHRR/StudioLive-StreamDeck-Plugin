@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.0 — Windows and macOS release (2026-10-22)
+
+- Ship one installer for Windows and macOS 13+, with Stream Deck 7.1+ and platform-specific mixer-address storage.
+- Record the user’s successful MacBook test of the preceding macOS test build.
+- Default new Level / Fade buttons to Toggle fade −∞ / 0 dB with a 3-second transition, consistently in the inspector and runtime. Preserve saved operations and durations.
+- Start the public release numbering at 1.0.0 (manifest 1.0.0.0). Earlier 1.x entries below describe development history; switching from a numerically higher build may require reinstalling the plugin. See [release notes](docs/RELEASE-1.0.0.md).
+
+## 1.9.4-macos-test.1 (prerelease)
+
+- Enable macOS 13+ in the plugin manifest; retain Windows and the existing plugin/action UUIDs. Stream Deck displays build 1.9.4.1.
+- Store the mixer address under `~/Library/Application Support/StudioLive-StreamDeck-Plugin/` on macOS; preserve the Windows location and SDK migration behavior.
+- Add platform-path and address replacement/restart tests; isolate SDK integration settings on both operating systems.
+- Include a MacBook installation and acceptance checklist. Native macOS installation, Intel/Apple Silicon runtime and real mixer controls await user testing.
+
 ## 1.9.3
 
 - Use a factual project introduction and add a Stream Deck screenshot to the README.

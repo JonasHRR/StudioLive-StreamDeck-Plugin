@@ -15,7 +15,7 @@ function inspector(level=false,settings:Record<string,unknown>={}) {
  const sent:any[]=[],timers=new Map<number,()=>void>();let ws:any,nextTimer=0;
  class FakeWebSocket {static OPEN=1;readyState=1;constructor(){ws=this;}send(text:string){sent.push(JSON.parse(text));}}
  const box:any={document:{getElementById:get},Option:class{constructor(public text:string,public value:unknown){}},WebSocket:FakeWebSocket,window:{STUDIOLIVE_DEFAULT_IP:'192.0.2.1'},setTimeout:(fn:()=>void)=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:(id:number)=>timers.delete(id)};
- vm.createContext(box);vm.runInContext(readFileSync('de.local.studiolive-mutes.sdPlugin/ui/settings.js','utf8'),box);
+ vm.createContext(box);vm.runInContext(readFileSync('de.local.studiolive-mutes.sdPlugin/ui/defaults.js','utf8'),box);vm.runInContext(readFileSync('de.local.studiolive-mutes.sdPlugin/ui/settings.js','utf8'),box);
  const action=`de.local.studiolive-mutes.${level?'level':'channel'}`;
  box.window.connectElgatoStreamDeckSocket('12345','pi-registration','registerPropertyInspector','{}',JSON.stringify({action,context:'button-context',payload:{settings}}));ws.onopen();
  const reply=(payload:any)=>ws.onmessage({data:JSON.stringify({event:'sendToPropertyInspector',payload})});
@@ -53,6 +53,18 @@ test('property inspector persists inverted send target and automatic name prefer
  get('channel').value='24';get('mix').value='16';get('autoName').checked=false;get('channel').onchange();
  assert.deepEqual(sent.at(-1).payload,{target:'auxsend',channel:24,mix:16,mode:'toggle',name:'',autoName:false});
 });
+test('new level inspector defaults to toggle fade and preserves explicit operations and zero durations',()=>{
+ const fresh=inspector(true);
+ assert.equal(fresh.get('operation').value,'toggle');assert.equal(fresh.get('duration').value,3);
+ assert.equal(fresh.get('toggleHelp').hidden,false);assert.equal(fresh.get('db').hidden,true);
+ assert.equal(fresh.sent.some(message=>message.event==='setSettings'),false);
+ fresh.get('channel').onchange();assert.equal(fresh.sent.at(-1).payload.operation,'toggle');assert.equal(fresh.sent.at(-1).payload.duration,3);
+ for(const operation of ['set','step','stop','toggle']){
+  const saved=inspector(true,{operation,db:-6,duration:0});
+  assert.equal(saved.get('operation').value,operation);assert.equal(saved.get('duration').value,0);
+ }
+});
+
 test('level inspector persists step/fade duration and exposes stop without a new value',()=>{
  const {get,sent}=inspector(true);assert.equal(get('levelFields').hidden,false);assert.equal(get('muteFields').hidden,true);
  get('operation').value='step';get('operation').onchange();assert.equal(get('db').value,1);assert.equal(get('floorRow').hidden,true);

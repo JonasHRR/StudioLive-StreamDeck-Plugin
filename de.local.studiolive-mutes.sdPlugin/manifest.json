@@ -2,9 +2,9 @@
   "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "UUID": "de.local.studiolive-mutes",
   "Name": "StudioLive Control",
-  "Version": "1.9.3.0",
+  "Version": "1.0.0.0",
   "Author": "StudioLive Control",
-  "Description": "Control your StudioLive mixer from Stream Deck. Levels, fades, mutes and sends, with live mixer feedback and your own button layout.",
+  "Description": "Control PreSonus StudioLive Series III mixers from Stream Deck on Windows and macOS. Levels, fades, mutes and sends with live mixer feedback.",
   "Category": "StudioLive Control",
   "CategoryIcon": "imgs/category",
   "Icon": "imgs/plugin",
@@ -17,6 +17,10 @@
     {
       "Platform": "windows",
       "MinimumVersion": "10"
+    },
+    {
+      "Platform": "mac",
+      "MinimumVersion": "13"
     }
   ],
   "Nodejs": {

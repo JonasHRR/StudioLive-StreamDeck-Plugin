@@ -1,6 +1,6 @@
 # Your controls, explained
 
-This guide covers **StudioLive Control 1.9.3**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected).
+This guide covers **StudioLive Control 1.0.0**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected). Windows and macOS use the same installer; see the [release notes](RELEASE-1.0.0.md) when moving from a development version.
 
 ## Pick the right target
 
@@ -64,7 +64,7 @@ These actions move the fader. They don't change its mute or remember a previous 
 
 ### One key for out and in
 
-Select **Toggle fade −∞ / 0 dB** and choose your duration. If the previous duration was 0, selecting this operation starts it at 3 seconds; you can change it afterward.
+New Level / Fade buttons default to **Toggle fade −∞ / 0 dB** with a **3-second** transition. Existing saved operations and durations stay unchanged. Choose your preferred duration. If the previous duration was 0, selecting this operation starts it at 3 seconds; you can change it afterward.
 
 At the confirmed floor, the next press goes to **0 dB**. From another position, it goes to **−∞**. Press again during a fade to reverse its destination — even before the first step has been sent.
 
@@ -131,15 +131,16 @@ Stream Deck moves to the next Multi-Action step without waiting for a fade to fi
 
 Enter your actual IPv4 address once and save it for all buttons. The example `192.0.2.1` is reserved for documentation and cannot be saved as the mixer address.
 
-The address is stored at:
+The address is stored at the following location for your operating system:
 
 ```text
-%LOCALAPPDATA%\StudioLive-StreamDeck-Plugin\mixer-settings.json
+Windows: %LOCALAPPDATA%\StudioLive-StreamDeck-Plugin\mixer-settings.json
+macOS:   ~/Library/Application Support/StudioLive-StreamDeck-Plugin/mixer-settings.json
 ```
 
 The plugin verifies the local file before confirming a save. Stream Deck global settings remain a compatibility mirror; a missing or empty value at restart doesn't erase the local address. A valid old global address migrates when no usable local file exists. If both stores have lost it, enter and save it once.
 
-The file belongs to your Windows account and is outside the source and plugin folders. Source archives and installers don't include it. Runtime traffic stays between the configured mixer and the local Stream Deck connection; there is no discovery broadcast, cloud connection, telemetry or UDP metering.
+The file belongs to your local user account and is outside the source and plugin folders. Source archives and installers don't include it. Runtime traffic stays between the configured mixer and the local Stream Deck connection; there is no discovery broadcast, cloud connection, telemetry or UDP metering.
 
 ## When something looks wrong
 

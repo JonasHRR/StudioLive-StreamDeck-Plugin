@@ -1,8 +1,10 @@
 # StudioLive Control
 
-StudioLive Control is a Windows Stream Deck plugin for PreSonus StudioLive Series III mixers. It provides direct control of levels, fades, mutes and sends, with live state, names and colors from the mixer.
+StudioLive Control is a Stream Deck plugin for PreSonus StudioLive Series III mixers. It provides direct control of levels, fades, mutes and sends, with live state, names and colors from the mixer.
 
-**Windows · Stream Deck 7.1+ · Version 1.9.3**
+**Windows · macOS · Stream Deck 7.1+ · Version 1.0.0**
+
+One installer serves Windows and macOS. The macOS test build was reported working on the user’s MacBook; see the [release notes](docs/RELEASE-1.0.0.md) for scope and migration from development builds.
 
 [Get started](#get-connected) · [User guide](docs/USER-GUIDE.md) · [Changelog](CHANGELOG.md)
 
@@ -31,16 +33,16 @@ Additional mixer functions are planned. The table above lists the currently impl
 
 ## Get connected
 
-You'll need **Windows 10 or 11**, **Stream Deck 7.1 or later**, and a mixer reachable on its **control network** via TCP port **53000**.
+You'll need **Windows 10 or 11**, or **macOS 13 or later**, **Stream Deck 7.1 or later**, and a mixer reachable on its **control network** via TCP port **53000**.
 
 1. Install `de.local.studiolive-mutes.streamDeckPlugin` with Stream Deck running. Use a release asset if available, or [build it yourself](docs/PUBLISHING.md).
 2. Add **Mute / Group / Send** or **Level / Fade** from the **StudioLive Control** category.
 3. Enter your mixer IPv4 address and click **Save mixer IP for all buttons**. Wait for the save confirmation.
 4. Choose a target and operation for the button.
 
-Your address is remembered on this Windows account. Existing profiles and button assignments remain compatible.
+Your address is remembered on this computer's user account. Existing profiles and button assignments remain compatible.
 
-For a first fade, choose **Level / Fade → Set fixed level / Fade**, select your target level and set a duration. For one-button out/in control, choose **Toggle fade −∞ / 0 dB**. Its return level is always **0 dB**; displayed dB values are approximate.
+New **Level / Fade** buttons default to **Toggle fade −∞ / 0 dB** with a **3-second** transition. Its return level is always **0 dB**; displayed dB values are approximate. Existing saved operations and durations are retained. For a specific target level, choose **Set fixed level / Fade**.
 
 ## Compatibility
 

@@ -9,6 +9,7 @@ import { until } from './simulator.js';
 import {mkdtemp,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {mixerAddressFile} from '../src/mixer-address-store.js';
 const { WebSocketServer } = createRequire(import.meta.url)('ws');
 
 test('bundled plugin registers via real SDK WebSocket; rendering, external feedback and Multi-Actions reach simulated TCP mixer', {timeout:7000}, async t => {
@@ -25,8 +26,8 @@ test('bundled plugin registers via real SDK WebSocket; rendering, external feedb
       if(message.event==='getGlobalSettings') socket.send(JSON.stringify({event:'didReceiveGlobalSettings',id:message.id,payload:{settings:{ip:'127.0.0.1'}}}));
     });
   });
-  const info={application:{version:'7.6.0',platform:'windows',platformVersion:'10.0.22631',language:'de',font:'Segoe UI'},devices:[{id:'simdeck',name:'Simulated Deck',type:0,size:{columns:5,rows:3}}],plugin:{uuid:'de.local.studiolive-mutes',version:'1.1.0.0'}};
-  const child=spawn(process.execPath,['bin/plugin.js','-port',String(server.address().port),'-pluginUUID','de.local.studiolive-mutes','-registerEvent','registerPlugin','-info',JSON.stringify(info)],{cwd:resolve('de.local.studiolive-mutes.sdPlugin'),env:{...process.env,LOCALAPPDATA:localData},windowsHide:true,stdio:'pipe'});
+  const info={application:{version:'7.6.0',platform:process.platform==='darwin'?'mac':'windows',platformVersion:process.platform==='darwin'?'13.0':'10.0.22631',language:'de',font:'Arial'},devices:[{id:'simdeck',name:'Simulated Deck',type:0,size:{columns:5,rows:3}}],plugin:{uuid:'de.local.studiolive-mutes',version:'1.0.0.0'}};
+  const child=spawn(process.execPath,['bin/plugin.js','-port',String(server.address().port),'-pluginUUID','de.local.studiolive-mutes','-registerEvent','registerPlugin','-info',JSON.stringify(info)],{cwd:resolve('de.local.studiolive-mutes.sdPlugin'),env:{...process.env,HOME:localData,LOCALAPPDATA:localData},windowsHide:true,stdio:'pipe'});
   let errors=''; child.stderr.on('data',b=>errors+=b.toString());
   t.after(()=>{child.kill();});
   await until(()=>received.some(m=>m.event==='registerPlugin'),2000);
@@ -115,8 +116,8 @@ test('saved mixer IP survives a fresh plugin process when Stream Deck global set
   });});
   const children:ReturnType<typeof spawn>[]=[];t.after(()=>{for(const child of children)child.kill();});
   const launch=()=>{
-    const info={application:{version:'7.6.0',platform:'windows',platformVersion:'10.0.22631',language:'en'},devices:[{id:'simdeck',name:'Simulator',type:0,size:{columns:5,rows:3}}],plugin:{uuid:'de.local.studiolive-mutes',version:'1.3.1.0'}};
-    const child=spawn(process.execPath,['bin/plugin.js','-port',String(server.address().port),'-pluginUUID','de.local.studiolive-mutes','-registerEvent','registerPlugin','-info',JSON.stringify(info)],{cwd:resolve('de.local.studiolive-mutes.sdPlugin'),env:{...process.env,LOCALAPPDATA:localData},windowsHide:true,stdio:'pipe'});children.push(child);return child;
+    const info={application:{version:'7.6.0',platform:process.platform==='darwin'?'mac':'windows',platformVersion:process.platform==='darwin'?'13.0':'10.0.22631',language:'en'},devices:[{id:'simdeck',name:'Simulator',type:0,size:{columns:5,rows:3}}],plugin:{uuid:'de.local.studiolive-mutes',version:'1.0.0.0'}};
+    const child=spawn(process.execPath,['bin/plugin.js','-port',String(server.address().port),'-pluginUUID','de.local.studiolive-mutes','-registerEvent','registerPlugin','-info',JSON.stringify(info)],{cwd:resolve('de.local.studiolive-mutes.sdPlugin'),env:{...process.env,HOME:localData,LOCALAPPDATA:localData},windowsHide:true,stdio:'pipe'});children.push(child);return child;
   };
   const action=(event:string,payload:any={})=>host.send(JSON.stringify({event,action:'de.local.studiolive-mutes.channel',context:'button',device:'simdeck',payload:{controller:'Keypad',settings:{channel:1},coordinates:{column:0,row:0},...payload}}));
   const first=launch();await until(()=>received.some(m=>m.event==='getGlobalSettings'),2000);
@@ -127,7 +128,7 @@ test('saved mixer IP survives a fresh plugin process when Stream Deck global set
   assert.equal(received.filter(m=>m.event==='setGlobalSettings').length,0);assert.equal(fixture.writes.length,0);
   action('sendToPlugin',{type:'mixerSettings',operation:'save',requestId:'save',ip:'127.0.0.1'});
   await until(()=>received.some(m=>m.event==='sendToPropertyInspector'&&m.payload.requestId==='save'&&m.payload.ok),2000);
-  assert.equal(JSON.parse(await readFile(join(localData,'StudioLive-StreamDeck-Plugin','mixer-settings.json'),'utf8')).ip,'127.0.0.1');
+  assert.equal(JSON.parse(await readFile(mixerAddressFile(process.platform,localData,{LOCALAPPDATA:localData}),'utf8')).ip,'127.0.0.1');
   assert.equal(received.find(m=>m.event==='setGlobalSettings').context,'de.local.studiolive-mutes');
   const exited=new Promise(resolve=>first.once('exit',resolve));first.kill();await exited;
   const previousConnections=received.filter(m=>m.event==='registerPlugin').length;const previousSubscribe=fixture.writes.filter(b=>b.toString('ascii',6,8)==='JM').length;const checkpoint=received.length;

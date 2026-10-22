@@ -1,4 +1,4 @@
-# Test report — version 1.9.3
+# Test report — version 1.0.0
 
 Checked on October 22, 2026. Start with the summary below for the current scope; the version notes preserve earlier observations and explain how coverage grew.
 
@@ -6,7 +6,8 @@ Checked on October 22, 2026. Start with the summary below for the current scope;
 
 | Area | Evidence | What it tells us |
 |---|---|---|
-| Automated controls | 74 tests under Node.js 22 and Stream Deck Node.js 20.20.2 | Simulated mute/level/fade commands, reconnects, SDK integration and settings behavior. |
+| Automated controls | 79 tests under Node.js 22.23.2 and Stream Deck Node.js 20.20.2 on Windows | Simulated mute/level/fade commands, reconnects, SDK integration and settings behavior. |
+| macOS | User reports the preceding macOS test build works flawlessly on their MacBook; platform-path and filesystem tests pass | Hardware model, chip, OS version and individual test results were not supplied. The final default-option change is covered by Windows automation. |
 | Input counts | Simulated 16/24/32/64-input banks; a real 32-input snapshot | Startup uses the declared input bank. Real 64S write acceptance is still open. |
 | A1, A2, Tape, Talkback | Read-only hardware fields plus simulator control tests | The real mixer exposes the parameters; real control-write acceptance remains open. |
 | Stream Deck UI | Recorded live editor inspections | Names, colors and selections appeared correctly; these inspections didn't trigger real controls. |
@@ -15,6 +16,22 @@ Checked on October 22, 2026. Start with the summary below for the current scope;
 Hardware observations used a StudioLive 24 Series III reporting firmware 3.4.0.111374. The user reported working controls; automated write tests use simulators. Earlier 24-channel counts reflect the old decoder's limit, not the mixer's full logical input count.
 
 For day-to-day setup, see the [user guide](docs/USER-GUIDE.md). The sections below are the verification record, including historical behavior that later versions changed.
+
+## 1.0.0: joint Windows/macOS release and default toggle fade
+
+Release numbering restarts at 1.0.0 (manifest 1.0.0.0) at the owner’s request. The preceding 1.9.x builds are development history. A higher installed development version may require reinstalling rather than an ordinary update; see the [release notes](docs/RELEASE-1.0.0.md). Plugin/action UUIDs and saved settings are retained.
+
+New level buttons default to Toggle fade −∞ / 0 dB and 3 seconds in both the inspector and the runtime, including a press before opening the inspector. Explicit saved operations and durations, including zero, retain their behavior. Two additional regression tests verify default inspector rendering/persistence, saved-operation preservation, the initial runtime preview, actual non-instant toggle execution and explicit stop. All 79 tests passed under Node.js 22.23.2 and Stream Deck Node.js 20.20.2 on Windows; type checking, build, official manifest validation and public-file checks passed.
+
+The user reported the preceding macOS test build working flawlessly on their MacBook. No detailed checklist, OS version or chip was provided; independent Intel/Apple Silicon coverage and a native Mac recheck of the final default change are not claimed. The earlier experimental report below records evidence available before that user confirmation.
+
+## 1.9.4-macos-test.1: experimental macOS package
+
+The manifest now declares macOS 13+ alongside Windows and retains Stream Deck 7.1+, Node.js 20, the shared JavaScript entry point and all plugin/action UUIDs. The manifest version is 1.9.4.1; npm/source metadata uses 1.9.4-macos-test.1. The mixer address uses the user's Library/Application Support directory on macOS, while Windows keeps its existing LOCALAPPDATA path and fallback. A valid SDK global address still migrates through the existing settings logic.
+
+Three added tests cover Windows path compatibility, macOS paths with spaces and Unicode regardless of LOCALAPPDATA, and creating/replacing/reopening a settings file in an Application Support-style directory. SDK integration subprocesses now use a temporary HOME as well as LOCALAPPDATA, resolve the appropriate settings path and declare the host platform. No native Mac host was used: path assertions and filesystem tests run on Windows and do not establish macOS permission, UI or runtime behavior.
+
+All 77 tests passed under Node.js 22.23.2 and the installed Stream Deck Node.js 20.20.2 on Windows. Type checking, build, official Elgato manifest validation and public-source/runtime privacy checks passed. No real mixer commands or local Stream Deck installation changes were made for this release. Native Intel/Apple Silicon execution, package installation, network permission prompts, mixer controls and wake/reconnect behavior remain open; use the [MacBook checklist](docs/MACOS-TEST.md).
 
 ## 1.9.3: compact inspector help
 

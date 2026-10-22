@@ -1,10 +1,14 @@
 import { mode } from './types.js';
 import { CommandCancelled, MixerService, type ChannelView } from './mixer-service.js';
-import { levelRequest, target, targetLabel, targetScope,type LevelRequest } from './controls.js';
+import { levelRequest, target, targetLabel, targetScope,type LevelRequest,type Target } from './controls.js';
+import {DEFAULT_LEVEL_SETTINGS} from './defaults.js';
 import { keySvg } from './presentation.js';
 import {levelLabel,type FadeDirection} from './level-label.js';
 export type ButtonSettings = { channel?:number|string; mode?:string; name?:string; target?:string; mix?:number|string; autoName?:boolean; actionType?:string; operation?:string; db?:number|string; duration?:number|string; fadeLabel?:string; colorMode?:string; customColor?:string };
 export interface ButtonSink { setImage(image: string): Promise<void>; setTitle(title: string): Promise<void>; showAlert(): Promise<void> }
+function levelButtonRequest(settings:ButtonSettings,t:Target):LevelRequest {
+  return levelRequest(t,settings.operation ?? DEFAULT_LEVEL_SETTINGS.operation,settings.db ?? 0,Number(settings.duration ?? (settings.operation===undefined?DEFAULT_LEVEL_SETTINGS.duration:0))*1000);
+}
 type Button = { sink: ButtonSink; settings: ButtonSettings; chain: Promise<void>; alive: boolean; last?: string };
 export class ButtonController {
   private buttons = new Map<string, Button>();
@@ -21,7 +25,7 @@ export class ButtonController {
   async press(settings: ButtonSettings, sink: ButtonSink): Promise<void> {
     try {
       const t=target(settings.target ?? 'line',settings.channel ?? 1,settings.mix ?? 1);
-      if(settings.actionType==='level') await this.mixer.executeLevel(levelRequest(t,settings.operation ?? 'stop',settings.db ?? 0,Number(settings.duration ?? 0)*1000));
+      if(settings.actionType==='level') await this.mixer.executeLevel(levelButtonRequest(settings,t));
       else await this.mixer.executeMute(t,mode(settings.mode));
     }
     catch(error) { if(!(error instanceof CommandCancelled)) await sink.showAlert().catch(() => {}); }
@@ -35,7 +39,7 @@ export class ButtonController {
       let view:ChannelView={status:this.mixer.status,pending:false,reason:this.mixer.reason};
       try {
         t=target(settings.target ?? 'line',settings.channel ?? 1,settings.mix ?? 1);
-        if(level) request=levelRequest(t,settings.operation ?? 'stop',settings.db ?? 0,Number(settings.duration ?? 0)*1000); else mode(settings.mode);
+        if(level) request=levelButtonRequest(settings,t); else mode(settings.mode);
         view=this.mixer.viewTarget(t,level);
       } catch { invalid=true; }
       const own=typeof settings.name==='string'?settings.name.trim():'';

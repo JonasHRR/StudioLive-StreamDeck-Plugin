@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from 'node:fs/promises';
-import { DEFAULT_IP } from '../build/defaults.js';
+import { DEFAULT_IP, DEFAULT_LEVEL_SETTINGS } from '../build/defaults.js';
 import { pngIcon } from './png-icon.mjs';
 const root = 'de.local.studiolive-mutes.sdPlugin';
 await mkdir(`${root}/imgs`, {recursive:true});
@@ -10,4 +10,4 @@ await writeFile(`${root}/imgs/plugin@2x.png`, pngIcon(512));
 await writeFile(`${root}/imgs/action.svg`, svg(40, 'SL', '#06685c'));
 await writeFile(`${root}/imgs/key.svg`, svg(144, 'OFFLINE', '#454b54'));
 await writeFile(`${root}/imgs/category.svg`, '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><g fill="none" stroke="white" stroke-width="3"><path d="M6 3v22M14 3v22M22 3v22"/><path d="M2 9h8M10 18h8M18 12h8"/></g></svg>');
-await writeFile(`${root}/ui/defaults.js`, `window.STUDIOLIVE_DEFAULT_IP = ${JSON.stringify(DEFAULT_IP)};\n`);
+await writeFile(`${root}/ui/defaults.js`, `window.STUDIOLIVE_DEFAULT_IP = ${JSON.stringify(DEFAULT_IP)};\nwindow.STUDIOLIVE_LEVEL_DEFAULTS = ${JSON.stringify(DEFAULT_LEVEL_SETTINGS)};\n`);

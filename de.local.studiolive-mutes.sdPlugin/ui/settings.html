@@ -14,7 +14,7 @@
 <small>MUTE stays red; unknown/offline stays gray.</small>
 <div id="muteFields"><label for="mode">Operation</label><select id="mode" disabled><option value="toggle">Toggle mute</option><option value="on">Mute on</option><option value="off">Mute off</option></select>
 <small>Multi-Actions: use “Mute on” or “Mute off”.</small></div>
-<div id="levelFields" hidden><label for="operation">Level action</label><select id="operation" disabled><option value="set">Set fixed level / Fade</option><option value="step">Adjust level relatively</option><option value="toggle">Toggle fade −∞ / 0 dB</option><option value="stop">Stop current fade</option></select>
+<div id="levelFields" hidden><label for="operation">Level action</label><select id="operation" disabled><option value="toggle">Toggle fade −∞ / 0 dB</option><option value="set">Set fixed level / Fade</option><option value="step">Adjust level relatively</option><option value="stop">Stop current fade</option></select>
 <div id="levelValues"><label for="db" id="dbLabel">Target level (≈ dB)</label><input id="db" type="number" min="-84" max="10" step="0.1" value="0" disabled>
 <div id="floorRow" hidden><label><input id="floor" type="checkbox" style="width:auto;margin-right:7px" disabled>Target −∞ (fader floor)</label></div>
 <small id="toggleHelp" hidden>Each press fades between −∞ and 0 dB. Press again to reverse.</small>

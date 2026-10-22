@@ -41,6 +41,20 @@ test('zero dB steps preserve every confirmed position and send no level writes',
  }
 });
 
+test('unconfigured level button previews and starts a toggle fade before opening its inspector; explicit stop still stops',async t=>{
+ const {service,mixer}=await setup(t),controller=new ButtonController(service);t.after(()=>controller.dispose());
+ let svg='',alerts=0;const sink:ButtonSink={async setTitle(){},async setImage(uri){svg=Buffer.from(uri.split(',')[1],'base64').toString();},async showAlert(){alerts++;}};
+ const settings={channel:1,actionType:'level'};
+ controller.appear('new',sink,settings);await controller.flushed();
+ assert.match(svg,/>FADE OUT</);assert.equal(mixer.parameterWrites.length,0);
+ const fading=controller.press(settings,sink);
+ await until(()=>mixer.parameterWrites.length>0);
+ assert.equal(service.viewTarget(target(),true).fadeTarget,0);
+ assert.ok(Number(mixer.parameterWrites[0].value)>0);
+ await controller.press({...settings,operation:'stop'},sink);await fading;
+ assert.equal(service.viewTarget(target(),true).fadeTarget,undefined);assert.equal(alerts,0);
+});
+
 test('toggle fades alternate confirmed endpoints and synchronize duplicate button previews',async t=>{
  const {service,mixer}=await setup(t),controller=new ButtonController(service);t.after(()=>controller.dispose());
  const images=new Map<string,string>();let alerts=0;
