@@ -2,8 +2,6 @@
 
 StudioLive Control is a Windows Stream Deck plugin for PreSonus StudioLive Series III mixers. It provides direct control of levels, fades, mutes and sends, with live state, names and colors from the mixer.
 
-The project is MIT licensed. You can use, modify and redistribute it under the terms of the [license](LICENSE).
-
 **Windows · Stream Deck 7.1+ · Version 1.9.3**
 
 [Get started](#get-connected) · [User guide](docs/USER-GUIDE.md) · [Changelog](CHANGELOG.md)
