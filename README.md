@@ -4,8 +4,6 @@ StudioLive Control is a Stream Deck plugin for PreSonus StudioLive Series III mi
 
 **Windows · macOS · Stream Deck 7.1+ · Version 1.0.0**
 
-One installer serves Windows and macOS. The macOS test build was reported working on the user’s MacBook; see the [release notes](docs/RELEASE-1.0.0.md) for scope and migration from development builds.
-
 [Get started](#get-connected) · [User guide](docs/USER-GUIDE.md) · [Changelog](CHANGELOG.md)
 
 ## Screenshot
