@@ -2,7 +2,7 @@
 
 StudioLive Control is a Stream Deck plugin for PreSonus StudioLive Series III mixers. It provides direct control of levels, fades, mutes and sends, with live state, names and colors from the mixer.
 
-**Windows · macOS · Stream Deck 7.1+ · Version 1.0.0**
+**Windows · macOS · Stream Deck 7.1+ · Version 1.0.1**
 
 [Get started](#get-connected) · [User guide](docs/USER-GUIDE.md) · [Changelog](CHANGELOG.md)
 
@@ -33,7 +33,7 @@ Additional mixer functions are planned. The table above lists the currently impl
 
 You'll need **Windows 10 or 11**, or **macOS 13 or later**, **Stream Deck 7.1 or later**, and a mixer reachable on its **control network** via TCP port **53000**.
 
-1. Install `de.local.studiolive-mutes.streamDeckPlugin` with Stream Deck running. Use a release asset if available, or [build it yourself](docs/PUBLISHING.md).
+1. Install `StudioLive-Control.streamDeckPlugin` with Stream Deck running. Use a release asset if available, or [build it yourself](docs/PUBLISHING.md).
 2. Add **Mute / Group / Send** or **Level / Fade** from the **StudioLive Control** category.
 3. Enter your mixer IPv4 address and click **Save mixer IP for all buttons**. Wait for the save confirmation.
 4. Choose a target and operation for the button.

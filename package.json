@@ -1,6 +1,6 @@
 {
-  "name": "studiolive-streamdeck-mutes",
-  "version": "1.0.0",
+  "name": "studiolive-control",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "test": "npm run build && node --test build/tests/*.test.js",
     "diagnose": "node build/diagnose.js",
     "validate": "streamdeck validate de.local.studiolive-mutes.sdPlugin",
-    "pack": "streamdeck pack de.local.studiolive-mutes.sdPlugin --output release --force --no-update-check",
+    "pack": "node scripts/pack.mjs",
     "source:public": "node scripts/export-source.mjs",
     "check:public": "node scripts/check-public.mjs",
     "checksums": "node scripts/checksums.mjs"

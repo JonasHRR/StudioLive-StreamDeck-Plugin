@@ -40,7 +40,7 @@ function render() {
   $('customColor').value=typeof actionSettings.customColor==='string' && /^#[0-9a-f]{6}$/i.test(actionSettings.customColor)?actionSettings.customColor:(isLevel?'#174e89':'#06685c');
   $('operation').value=actionSettings.operation ?? window.STUDIOLIVE_LEVEL_DEFAULTS.operation; $('db').value=actionSettings.db ?? 0; $('duration').value=actionSettings.duration ?? (actionSettings.operation===undefined?window.STUDIOLIVE_LEVEL_DEFAULTS.duration:0);
   $('floor').checked=$('operation').value==='set' && Number(actionSettings.db)===-84;
-  $('heading').textContent=isLevel?'StudioLive · Level / Fade':'StudioLive · Mute';
+  $('heading').textContent=isLevel?'StudioLive Control · Level / Fade':'StudioLive Control · Mute';
   $('muteFields').hidden=isLevel; $('levelFields').hidden=!isLevel;
   for(const id of editable) $(id).disabled=false; levelFields(); colorFields();
 }

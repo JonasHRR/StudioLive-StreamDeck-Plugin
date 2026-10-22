@@ -1,6 +1,6 @@
 # Your controls, explained
 
-This guide covers **StudioLive Control 1.0.0**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected).
+This guide covers **StudioLive Control 1.0.1**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected).
 
 ## Pick the right target
 

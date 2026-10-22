@@ -22,7 +22,7 @@ Stream Deck supplies the runtime. Both operating systems use the same installer.
 
 ## Installation
 
-1. Download `de.local.studiolive-mutes.streamDeckPlugin` from the release assets.
+1. Download the `.streamDeckPlugin` installer from the release assets.
 2. Open it with Stream Deck running.
 3. Add **Mute / Group / Send** or **Level / Fade** from **StudioLive Control**.
 4. Enter the mixer IPv4 address, save it for all buttons and choose a target.
@@ -37,7 +37,7 @@ The plugin controls targets that provide valid mixer feedback. Displayed dB valu
 
 | File | Contents |
 |---|---|
-| `de.local.studiolive-mutes.streamDeckPlugin` | Windows/macOS installer. |
+| Stream Deck installer | Windows/macOS installer. |
 | `StudioLive-Control-1.0.0-source.zip` | Source, documentation, assets and dependency lockfile. |
 | `RELEASE-1.0.0.md` | Release notes. |
 | `SHA256SUMS.txt` | SHA-256 checksums for the three files above. |

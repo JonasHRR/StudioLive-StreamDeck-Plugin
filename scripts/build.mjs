@@ -20,6 +20,7 @@ await copyFile('docs/PUBLISHING.md', `${plugin}/docs/PUBLISHING.md`);
 await copyFile('docs/USER-GUIDE.md', `${plugin}/docs/USER-GUIDE.md`);
 await copyFile('docs/TESTING.md', `${plugin}/docs/TESTING.md`);
 await copyFile('docs/RELEASE-1.0.0.md', `${plugin}/docs/RELEASE-1.0.0.md`);
+await copyFile('docs/RELEASE-1.0.1.md', `${plugin}/docs/RELEASE-1.0.1.md`);
 await mkdir(`${plugin}/docs/images`, {recursive:true});
 await copyFile('docs/images/studiolive-control.jpg', `${plugin}/docs/images/studiolive-control.jpg`);
 await rm(`${plugin}/docs/images/studiolive-control.png`, {force:true});

@@ -98,7 +98,7 @@ export class StudioLiveTransport implements MixerTransport {
       this.deadline = setTimeout(() => fail('Connection or initial state timed out.'), this.timeoutMs);
       socket.connect(this.port, ip, () => {
         socket.write(jsonPacket({ id: 'Subscribe', clientName: 'UC-Surface', clientInternalName: 'ucremoteapp',
-          clientType: 'StudioLive API', clientDescription: 'Stream Deck Main Mutes',
+          clientType: 'StudioLive API', clientDescription: 'StudioLive Control',
           clientIdentifier: randomBytes(8).toString('hex'), clientOptions: 'perm users levl redu rtan', clientEncoding: 23106 }));
       });
     });

@@ -1,6 +1,6 @@
 # Build and publish
 
-Release workflow for **StudioLive Control 1.0.0**. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) holds the source; installers and source archives are attached to GitHub Releases.
+Release workflow for **StudioLive Control 1.0.1**. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) holds the source; installers and source archives are attached to GitHub Releases.
 
 ## Build and check
 
@@ -33,24 +33,26 @@ Adjust the path for the installed runtime. Pass the expanded file list when usin
 
 | File in `release/` | Purpose |
 |---|---|
-| `de.local.studiolive-mutes.streamDeckPlugin` | Installer for Windows and macOS. |
-| `StudioLive-Control-1.0.0-source.zip` | Clean source snapshot. |
+| `StudioLive-Control.streamDeckPlugin` | Installer for Windows and macOS. |
+| `StudioLive-Control-1.0.1-source.zip` | Clean source snapshot. |
 | `SHA256SUMS.txt` | Installer and source checksums. |
 
-For distribution, `release/v1.0.0/` also includes `RELEASE-1.0.0.md` and checksums covering all three assets. The optional `StudioLive-Control-1.0.0.zip` transfer archive contains the four files together.
+For distribution, `release/v1.0.1/` also includes `RELEASE-1.0.1.md` and checksums covering all three assets. The optional `StudioLive-Control-1.0.1.zip` transfer archive contains the four files together.
 
 The source exporter uses an explicit inventory. Local research, settings, logs, dependencies and generated bundles stay outside it. The plugin's `.sdignore` excludes runtime logs. `check:public` scans selected source and built plugin files for private addresses, personal Windows paths and private-key markers.
+
+`npm run pack` invokes the official Elgato packer and names the result `StudioLive-Control.streamDeckPlugin`. The UUID and internal directory remain unchanged for existing profiles. Distribute the named result shown in the table above.
 
 ## Publish to GitHub
 
 1. Review and commit the intended source and documentation.
-2. Push the branch and create a tag for the release commit, such as **v1.0.0**.
-3. Add release notes from the [changelog](../CHANGELOG.md) and [release notes](RELEASE-1.0.0.md).
+2. Push the branch and create a tag for the release commit, such as **v1.0.1**.
+3. Add release notes from the [changelog](../CHANGELOG.md) and [release notes](RELEASE-1.0.1.md).
 4. Upload the installer, source archive, release notes and matching checksums.
 5. Verify the uploaded files and publish the release.
 
 A pushed tag alone does not upload the installer. Generated bundles and `release/` stay outside Git.
 
-Use a new version for subsequent releases. Keep the package, lockfile, runtime package and manifest version aligned; the current versions are **1.0.0** and **1.0.0.0**. Keep plugin/action UUIDs stable so saved profiles remain compatible.
+Use a new version for subsequent releases. Keep the package, lockfile, runtime package and manifest version aligned; the current versions are **1.0.1** and **1.0.1.0**. Keep plugin/action UUIDs stable so saved profiles remain compatible.
 
 Use documentation-only addresses in examples and fixtures. Keep actual mixer addresses, profiles and logs out of commits and issue attachments. Describe compatibility using the [recorded test scope](../TEST-REPORT.md).

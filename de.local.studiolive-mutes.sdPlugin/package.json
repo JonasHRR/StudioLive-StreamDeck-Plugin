@@ -1,6 +1,6 @@
 {
-  "name": "studiolive-main-mutes-runtime",
-  "version": "1.0.0",
+  "name": "studiolive-control-runtime",
+  "version": "1.0.1",
   "private": true,
   "type": "module"
 }

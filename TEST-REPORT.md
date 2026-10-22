@@ -1,8 +1,12 @@
-# Test report — 1.0.0
+# Test report — 1.0.1
 
-Recorded on October 22, 2026. This report summarizes the verification available for StudioLive Control 1.0.0.
+Recorded on October 22, 2026. This report summarizes the verification available for StudioLive Control 1.0.1.
 
 ## Automated checks
+
+Version 1.0.1 unifies the product name in the inspector, npm packages, license attribution, mixer subscription and downloadable installer. The official packer still builds the original UUID internally; a packaging step names the download `StudioLive-Control.streamDeckPlugin`. Plugin/action UUIDs, target assignments and address persistence remain compatible. The existing simulator suite covers those saved profiles and settings. No new real mixer control writes were performed for this branding change.
+
+The installed Windows copy was updated and Stream Deck restarted. A fresh runtime confirmed version 1.0.1.0. Live inspection showed StudioLive Control in the action header and in both mute and level/fade inspectors, with existing names, colors and connection state restored. Inspection only selected buttons in the editor and did not change assignments or trigger mixer controls.
 
 The suite contains **81 tests**, executed on Windows under **Node.js 22.23.2** and **Stream Deck Node.js 20.20.2**. All passed. Type checking, the build, Elgato manifest validation and source/runtime publication checks also passed.
 

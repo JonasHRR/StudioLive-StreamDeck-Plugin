@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-10-22
+
+- Use StudioLive Control consistently for package metadata, installer downloads, license attribution and the mixer client description.
+- Retain the published plugin/action UUIDs and settings location so existing profiles and saved addresses remain compatible.
+
 ## 1.0.0 — 2026-10-22
 
 Initial release for Windows and macOS.

@@ -1,6 +1,8 @@
 # How the plugin fits together
 
-This is the architecture of **StudioLive Control 1.0.0**. The plugin has one connection to the mixer, one shared view of confirmed state, and two Stream Deck actions. That keeps duplicate buttons in sync and gives reconnects one clear owner.
+This is the architecture of **StudioLive Control 1.0.1**. The plugin has one connection to the mixer, one shared view of confirmed state, and two Stream Deck actions. That keeps duplicate buttons in sync and gives reconnects one clear owner.
+
+The product and package names use StudioLive Control. The published `de.local.studiolive-mutes` plugin/action identifiers and corresponding development directory are retained for profile compatibility. The pack script uses Elgato's official validator/packer and renames only the outer download to `StudioLive-Control.streamDeckPlugin`; the archive keeps the established identity internally.
 
 ## Where to look
 
