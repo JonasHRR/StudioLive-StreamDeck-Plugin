@@ -1,10 +1,10 @@
-# From source to a release
+# Build and publish
 
-This is the workflow for **StudioLive Control 1.0.0** (manifest **1.0.0.0**), the shared Windows/macOS release. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) contains the source. A local build does not publish a GitHub Release.
+Release workflow for **StudioLive Control 1.0.0**. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) holds the source; installers and source archives are attached to GitHub Releases.
 
 ## Build and check
 
-Use Node.js **22.23 or later**, npm, and Stream Deck **7.1 or later**. The recorded build host is Windows. Build scripts use portable JavaScript; building the source on a native Mac is not independently verified. From the repository folder:
+Use Node.js **22.23 or later**, npm and Stream Deck **7.1 or later**. The recorded build host is Windows. From the repository folder:
 
 ```powershell
 npm ci
@@ -17,9 +17,9 @@ npm run source:public
 npm run checksums
 ```
 
-Run the commands in order and stop on failure. Tests build first and use local simulators; SDK integration requires localhost TCP **53000** to be free. Validation uses Elgato's CLI. Stream Deck supplies Node.js 20 for the installed plugin.
+Run these in order and stop on failure. Tests build first and use simulators; SDK integration needs localhost TCP **53000** to be free. Stream Deck supplies Node.js 20 for the installed plugin.
 
-Also run the built tests under the installed Stream Deck runtime. On the recorded Windows host:
+Also check the built tests under Stream Deck's runtime. On the recorded Windows installation:
 
 ```powershell
 $streamDeckNode = Join-Path $env:APPDATA 'Elgato\StreamDeck\NodeJS\20.20.2\node.exe'
@@ -27,30 +27,30 @@ $testFiles = Get-ChildItem build/tests -Filter '*.test.js' | ForEach-Object Full
 & $streamDeckNode --test @testFiles
 ```
 
-Adjust the runtime version for the local installation. Pass expanded file paths because Node.js 20 on Windows does not expand this wildcard like the development runtime.
+Adjust the path for the installed runtime. Pass the expanded file list when using Node.js 20 on Windows.
 
-## Release files
+## Generated files
 
-The commands produce the shared installer `de.local.studiolive-mutes.streamDeckPlugin`, `StudioLive-Mutes-1.0.0-source.zip` and `SHA256SUMS.txt` in `release/`. The root checksum file covers the installer and source ZIP.
+| File in `release/` | Purpose |
+|---|---|
+| `de.local.studiolive-mutes.streamDeckPlugin` | Installer for Windows and macOS. |
+| `StudioLive-Control-1.0.0-source.zip` | Clean source snapshot. |
+| `SHA256SUMS.txt` | Installer and source checksums. |
 
-The prepared distribution is also saved under `release/v1.0.0/`, with the installer, source ZIP, a copy of `docs/RELEASE-1.0.0.md` and checksums for all three files. The sibling `release/StudioLive-Control-1.0.0.zip` contains those four files and has a separate `.sha256` file. Unpack this transfer ZIP before opening the inner installer. Use the same installer on Windows and macOS.
+For distribution, `release/v1.0.0/` also includes `RELEASE-1.0.0.md` and checksums covering all three assets. The optional `StudioLive-Control-1.0.0.zip` transfer archive contains the four files together.
 
-Source export uses an explicit inventory. Local research, settings, logs, dependencies and generated bundles stay out. The plugin's `.sdignore` excludes runtime logs. `check:public` scans selected source and built plugin files for private addresses, personal Windows paths and private-key markers. Review Git changes too; ignored files do not automatically belong in releases.
-
-## Version reset and installation
-
-The owner requested **1.0.0** as the release number after the development builds through **1.9.4-macos-test.1**. This is numerically lower than those builds. Do not describe it as an automatic upgrade. Export profiles before switching; if Stream Deck blocks the downgrade, remove the old plugin and install 1.0.0, then restore profiles as needed. UUIDs and address-file locations remain stable. See [release notes](RELEASE-1.0.0.md).
-
-Older 1.x changelog/test sections are development history. Preserve historical packages rather than replacing an unrelated earlier 1.0.0 asset or tag.
+The source exporter uses an explicit inventory. Local research, settings, logs, dependencies and generated bundles stay outside it. The plugin's `.sdignore` excludes runtime logs. `check:public` scans selected source and built plugin files for private addresses, personal Windows paths and private-key markers.
 
 ## Publish to GitHub
 
-Review the source diff, commit the intended source and docs, and push to the existing repository. Generated bundles and `release/` remain outside Git. Use tag **v1.0.0** only after checking that it is unused; never overwrite a historical tag. Publish a normal release, with the current [release notes](RELEASE-1.0.0.md), freshly generated installer, source archive and checksums. Creating a local package does not perform these publication steps.
+1. Review and commit the intended source and documentation.
+2. Push the branch and create a tag for the release commit, such as **v1.0.0**.
+3. Add release notes from the [changelog](../CHANGELOG.md) and [release notes](RELEASE-1.0.0.md).
+4. Upload the installer, source archive, release notes and matching checksums.
+5. Verify the uploaded files and publish the release.
 
-Keep the validation scope explicit: the user confirmed the preceding test build on one MacBook, without supplying chip/OS details. Automated tests run on Windows. Real 64S and additional-input write acceptance remain limited as recorded in [TEST-REPORT.md](../TEST-REPORT.md).
+A pushed tag alone does not upload the installer. Generated bundles and `release/` stay outside Git.
 
-## Keep metadata aligned
+Use a new version for subsequent releases. Keep the package, lockfile, runtime package and manifest version aligned; the current versions are **1.0.0** and **1.0.0.0**. Keep plugin/action UUIDs stable so saved profiles remain compatible.
 
-Update `package.json`, both root version entries in `package-lock.json`, `de.local.studiolive-mutes.sdPlugin/package.json`, and the manifest's four-part version together. The current values are **1.0.0** and **1.0.0.0**. Update current docs and release notes, then rerun checks and regenerate all release artifacts. Keep plugin/action UUIDs stable.
-
-Use documentation-only addresses in examples and fixtures. Keep actual mixer addresses, profiles and logs out of commits and public issue attachments.
+Use documentation-only addresses in examples and fixtures. Keep actual mixer addresses, profiles and logs out of commits and issue attachments. Describe compatibility using the [recorded test scope](../TEST-REPORT.md).

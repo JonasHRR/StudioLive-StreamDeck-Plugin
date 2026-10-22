@@ -16,14 +16,12 @@ await copyFile('CHANGELOG.md', `${plugin}/CHANGELOG.md`);
 await copyFile('TEST-REPORT.md', `${plugin}/TEST-REPORT.md`);
 await mkdir(`${plugin}/docs`, {recursive:true});
 await copyFile('docs/ARCHITECTURE.md', `${plugin}/docs/ARCHITECTURE.md`);
-await copyFile('docs/ARCHITECTURE-1.0.md', `${plugin}/docs/ARCHITECTURE-1.0.md`);
-await copyFile('docs/TEST-REPORT-1.0.md', `${plugin}/docs/TEST-REPORT-1.0.md`);
 await copyFile('docs/PUBLISHING.md', `${plugin}/docs/PUBLISHING.md`);
 await copyFile('docs/USER-GUIDE.md', `${plugin}/docs/USER-GUIDE.md`);
-await copyFile('docs/MACOS-TEST.md', `${plugin}/docs/MACOS-TEST.md`);
+await copyFile('docs/TESTING.md', `${plugin}/docs/TESTING.md`);
 await copyFile('docs/RELEASE-1.0.0.md', `${plugin}/docs/RELEASE-1.0.0.md`);
 await mkdir(`${plugin}/docs/images`, {recursive:true});
 await copyFile('docs/images/studiolive-control.jpg', `${plugin}/docs/images/studiolive-control.jpg`);
 await rm(`${plugin}/docs/images/studiolive-control.png`, {force:true});
 // Remove only obsolete generated documentation from earlier builds.
-for(const file of ['ANLEITUNG.md','PRUEFBERICHT.md','docs/ARCHITEKTUR.md','docs/ARCHITEKTUR-1.0.md','docs/PRUEFBERICHT-1.0.md']) await rm(`${plugin}/${file}`,{force:true});
+for(const file of ['ANLEITUNG.md','PRUEFBERICHT.md','docs/ARCHITEKTUR.md','docs/ARCHITEKTUR-1.0.md','docs/PRUEFBERICHT-1.0.md','docs/ARCHITECTURE-1.0.md','docs/TEST-REPORT-1.0.md','docs/MACOS-TEST.md']) await rm(`${plugin}/${file}`,{force:true});

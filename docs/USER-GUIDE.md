@@ -1,6 +1,6 @@
 # Your controls, explained
 
-This guide covers **StudioLive Control 1.0.0**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected). Windows and macOS use the same installer; see the [release notes](RELEASE-1.0.0.md) when moving from a development version.
+This guide covers **StudioLive Control 1.0.0**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected).
 
 ## Pick the right target
 
@@ -23,7 +23,7 @@ These are selectable ranges, not a promise that every mixer provides every targe
 
 **Additional inputs** brings A1, A2, Tape and Talkback into one list. Each stereo Aux input is one target. Talkback buttons control its own mute and level; destinations, routing, preamp gain and phantom power are outside this plugin's controls.
 
-**Mix bus** is the name used for the former Aux / FlexMix bus category. Existing assignments still work. The mixer's configuration determines the bus type.
+**Mix bus** selects an output bus. The mixer's configuration determines its type.
 
 The list shows channel names next to their numbers, such as **No. 1 · Mic 1**. Send buttons show both the input name and the destination bus name. Live renames update the list while keeping your selected number and unfinished edits. When names are unavailable, you'll see numbers only.
 
@@ -58,7 +58,7 @@ Choose your target first, then pick an operation:
 
 To fade a channel all the way down, choose **Set fixed level / Fade**, enable **Target −∞**, and set the duration to **3 s**. To bring it to a particular level, use another fixed button with that target.
 
-Regular fixed targets run from **−60 to +10 dB**. The infinity checkbox uses the existing stored value **−84** for the fader floor, so older floor buttons still restore correctly. It isn't available for relative steps.
+Regular fixed targets run from **−60 to +10 dB**. Use the infinity checkbox to select the fader floor. It isn't available for relative steps.
 
 These actions move the fader. They don't change its mute or remember a previous level to restore later.
 
@@ -82,7 +82,7 @@ The key previews the next press as **FADE IN** or **FADE OUT**. Duplicate keys s
 
 A **FADE --** key uses a lighter tint of its current color. It returns to full color when the fade would change the level again. This covers reached targets, zero steps and steps clamped at the floor or top. Pending work must finish before a key is marked inactive.
 
-While offline, the last known direction may remain visible with **OFFLINE** below it. That display history resets when the plugin restarts. Instant operations show their numeric labels; the old manual fade-label setting is no longer used.
+While offline, the last known direction may remain visible with **OFFLINE** below it. That display history resets when the plugin restarts. Instant operations show their numeric labels.
 
 ### A note about the dB scale
 
@@ -138,7 +138,7 @@ Windows: %LOCALAPPDATA%\StudioLive-StreamDeck-Plugin\mixer-settings.json
 macOS:   ~/Library/Application Support/StudioLive-StreamDeck-Plugin/mixer-settings.json
 ```
 
-The plugin verifies the local file before confirming a save. Stream Deck global settings remain a compatibility mirror; a missing or empty value at restart doesn't erase the local address. A valid old global address migrates when no usable local file exists. If both stores have lost it, enter and save it once.
+The plugin verifies the local file before confirming a save. Stream Deck global settings remain a compatibility mirror; a missing or empty value at restart doesn't erase the local address. A valid Stream Deck global address can be used when no usable local file exists. If both stores have lost it, enter and save it once.
 
 The file belongs to your local user account and is outside the source and plugin folders. Source archives and installers don't include it. Runtime traffic stays between the configured mixer and the local Stream Deck connection; there is no discovery broadcast, cloud connection, telemetry or UDP metering.
 

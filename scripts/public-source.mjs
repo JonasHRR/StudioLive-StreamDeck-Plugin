@@ -1,7 +1,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 
 // Explicit source inventory: local research, settings, logs and old releases stay out.
-const files=['.gitattributes','.gitignore','package.json','package-lock.json','tsconfig.json','LICENSE','THIRD_PARTY_NOTICES.md','README.md','CHANGELOG.md','PLAN.md','TEST-REPORT.md'];
+const files=['.gitattributes','.gitignore','package.json','package-lock.json','tsconfig.json','LICENSE','THIRD_PARTY_NOTICES.md','README.md','CHANGELOG.md','TEST-REPORT.md'];
 const roots=['src','tests','scripts','docs'];
 const plugin='de.local.studiolive-mutes.sdPlugin';
 export async function publicSource() {

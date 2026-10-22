@@ -1,6 +1,6 @@
 # How the plugin fits together
 
-This is the architecture of **StudioLive Control 1.9.2**. The plugin has one connection to the mixer, one shared view of confirmed state, and two Stream Deck actions. That keeps duplicate buttons in sync and gives reconnects one clear owner.
+This is the architecture of **StudioLive Control 1.0.0**. The plugin has one connection to the mixer, one shared view of confirmed state, and two Stream Deck actions. That keeps duplicate buttons in sync and gives reconnects one clear owner.
 
 ## Where to look
 
@@ -92,7 +92,7 @@ Labels use that same state and conversion logic:
 - **FADE --** marks an idle fixed/relative request whose goal is already within confirmation tolerance.
 - Unknown or busy state never claims that a target is reached.
 
-The controller retains up to 128 recent directions for offline display, keyed by normalized request. This history resets at restart. The old `fadeLabel` profile field is preserved but ignored.
+The controller retains up to 128 recent directions for offline display, keyed by normalized request. This history resets at restart.
 
 ## Inspector, names and rendering
 
@@ -115,7 +115,7 @@ macOS:   ~/Library/Application Support/StudioLive-StreamDeck-Plugin/mixer-settin
 
 It contains only `{version, ip}`. Writes use a temporary sibling, flush and rename, and an explicit save is acknowledged only after readback. Reads and writes are serialized. A usable local file takes precedence at startup; a missing or corrupt file can migrate a valid SDK global address.
 
-Both platforms use the same JavaScript bundle and Stream Deck-provided Node.js 20 runtime. The application code uses no native add-ons or Windows shell commands. Version 1.0.0 declares macOS from version 13. The user reported the preceding macOS test build working on their MacBook; exact OS/chip details and separate Intel/Apple Silicon acceptance were not supplied.
+Both platforms use the same JavaScript bundle and Stream Deck-provided Node.js 20 runtime. The application code uses no native add-ons or Windows shell commands. The manifest supports macOS 13 or later. Platform verification is documented in the [test report](../TEST-REPORT.md).
 
 SDK globals remain a compatibility mirror, with reads bounded to two seconds. Empty or example-address events don't erase a known working address. `192.0.2.1` is a documentation placeholder, never an automatic saved connection.
 
@@ -133,12 +133,12 @@ npx streamdeck link de.local.studiolive-mutes.sdPlugin
 npx streamdeck restart de.local.studiolive-mutes
 ```
 
-Check that the process or displayed behavior actually changed: a successful CLI response has previously left an old renderer running. If needed, fully quit and reopen Stream Deck. If developer mode was previously off, restore it with `npx streamdeck dev --disable`.
+Check that the plugin process or displayed behavior changed after reloading. If needed, fully quit and reopen Stream Deck. If developer mode was previously off, restore it with `npx streamdeck dev --disable`.
 
 See [Publishing](PUBLISHING.md) for the full build/check sequence and [the test report](../TEST-REPORT.md) for simulator and hardware coverage.
 
-## Credits and earlier design notes
+## Credits
 
 Protocol formats, the fader curve and the rewritten UBJSON decoder derive from Andrew Wong's MIT-licensed [StudioLive API](https://github.com/featherbear/presonus-studiolive-api), version 1.9.1, revision `3e02b29a4a5b28695b6e1fad057ec4b4508f915a`. Its original client is a development reference; this plugin owns its transport lifecycle.
 
-The [Companion module](https://github.com/featherbear/bitfocus-companion-module-presonus-studiolive), revision `79eb3afe5a584881000e1531277b9b8c070c1c5c`, was also used as a reference. The original review is preserved in [Architecture 1.0](ARCHITECTURE-1.0.md); licenses are in [Third-party notices](../THIRD_PARTY_NOTICES.md).
+The [Companion module](https://github.com/featherbear/bitfocus-companion-module-presonus-studiolive), revision `79eb3afe5a584881000e1531277b9b8c070c1c5c`, was also used as a reference. Licenses are in [Third-party notices](../THIRD_PARTY_NOTICES.md).
