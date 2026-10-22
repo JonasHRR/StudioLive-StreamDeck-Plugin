@@ -1,6 +1,6 @@
 # How the plugin fits together
 
-This is the architecture of **version 1.9.1**. The plugin has one connection to the mixer, one shared view of confirmed state, and two Stream Deck actions. That keeps duplicate buttons in sync and gives reconnects one clear owner.
+This is the architecture of **StudioLive Control 1.9.2**. The plugin has one connection to the mixer, one shared view of confirmed state, and two Stream Deck actions. That keeps duplicate buttons in sync and gives reconnects one clear owner.
 
 ## Where to look
 

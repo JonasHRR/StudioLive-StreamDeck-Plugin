@@ -1,6 +1,6 @@
 # From source to a release
 
-This is the release workflow for **StudioLive Main Mutes 1.9.1**. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) holds the source; installers and source ZIPs are generated locally and attached separately when publishing a GitHub Release.
+This is the release workflow for **StudioLive Control 1.9.2**. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) holds the source; installers and source ZIPs are generated locally and attached separately when publishing a GitHub Release.
 
 ## Build and check
 
@@ -36,7 +36,7 @@ The commands produce these files in `release/`:
 | File | Purpose |
 |---|---|
 | `de.local.studiolive-mutes.streamDeckPlugin` | Double-click installer for Stream Deck. |
-| `StudioLive-Mutes-1.9.1-source.zip` | Clean source snapshot, including docs, assets, lockfile and licenses. |
+| `StudioLive-Mutes-1.9.2-source.zip` | Clean source snapshot, including docs, assets, lockfile and licenses. |
 | `SHA256SUMS.txt` | SHA-256 checksums for the installer and source ZIP. |
 
 The source exporter uses an explicit inventory. Local research, logs, settings, old releases, dependencies and generated bundles are excluded. The plugin's `.sdignore` also excludes logs from packaging.
@@ -51,7 +51,7 @@ For a separate clean checkout, extract the source ZIP into a new folder. It alre
 
 ## Publish a GitHub Release
 
-Create a tag such as **v1.9.1** for the checked commit, write the notes from the [changelog](../CHANGELOG.md), and attach the three files above to its GitHub Release.
+Create a tag such as **v1.9.2** for the checked commit, write the notes from the [changelog](../CHANGELOG.md), and attach the three files above to its GitHub Release.
 
 A pushed tag alone doesn't upload the installer. GitHub's automatic source download also doesn't contain the built plugin bundle.
 
@@ -64,7 +64,7 @@ Update these together:
 - `package.json`
 - Both root version entries in `package-lock.json`
 - `de.local.studiolive-mutes.sdPlugin/package.json`
-- The manifest's four-part version, such as `1.9.1.0`
+- The manifest's four-part version, such as `1.9.2.0`
 
 Update the changelog and current documentation examples, rerun the checks, then rebuild the installer, source ZIP and checksums. Keep plugin/action UUIDs stable so existing profiles continue to work.
 

@@ -1,6 +1,6 @@
-# Make the buttons work for you
+# Your controls, explained
 
-This guide covers **StudioLive Main Mutes 1.9.1**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected).
+This guide covers **StudioLive Control 1.9.2**. If you're setting up your first key, start with the [quick setup](../README.md#get-connected).
 
 ## Pick the right target
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.2
+
+- Introduce StudioLive Control as the product and Stream Deck category name, reflecting levels, fades, mutes and sends in one mixer-control toolkit.
+- Simplify the README around the workflow, current controls and future expansion; align the guide, inspector title and static icon labels.
+- Retain plugin/action identifiers, saved settings and control behavior for existing profiles.
+
 ## 1.9.1
 
 - Group A1, A2, Tape and Talkback under one Additional inputs target type for both mute and level/fade actions.

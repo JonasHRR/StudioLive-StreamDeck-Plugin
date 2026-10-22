@@ -1,4 +1,4 @@
-# Test report — version 1.9.1
+# Test report — version 1.9.2
 
 Checked on October 22, 2026. Start with the summary below for the current scope; the version notes preserve earlier observations and explain how coverage grew.
 
@@ -15,6 +15,12 @@ Checked on October 22, 2026. Start with the summary below for the current scope;
 Hardware observations used a StudioLive 24 Series III reporting firmware 3.4.0.111374. The user reported working controls; automated write tests use simulators. Earlier 24-channel counts reflect the old decoder's limit, not the mixer's full logical input count.
 
 For day-to-day setup, see the [user guide](docs/USER-GUIDE.md). The sections below are the verification record, including historical behavior that later versions changed.
+
+## 1.9.2: StudioLive Control presentation
+
+This update changes the product/category name, inspector title, static SVG labels and documentation. The README distinguishes available controls from future expansion. Plugin/action UUIDs, stored target identifiers, runtime commands and existing profile settings are unchanged. Earlier live UI and hardware observations below belong to their recorded versions; this presentation update does not claim a new hardware acceptance check.
+
+The build, official Elgato validation and source/runtime publication checks passed. The 74-test runtime results above apply to the unchanged control code; this presentation-only update was checked through its generated assets, documentation and package metadata.
 
 ## 1.9.1: grouped additional inputs
 
@@ -138,9 +144,9 @@ Windows 11 Pro 23H2, build 22631.6199; Stream Deck 7.6.0.23012 with a normal 15-
 | English live button and inspector inspection | Passed; existing mixer connection and settings retained |
 | Public-file checks | Source and built plugin passed |
 | Clean public source ZIP (1.2.0) | Extracted, dependencies installed from the pinned lockfile using the local offline npm cache; build, public-file check and CLI validation passed |
-| Official packaging and release files | Version 1.9.1.0 installer, public source ZIP and SHA-256 checksums generated |
+| Official packaging and release files | Version 1.9.2.0 installer, public source ZIP and SHA-256 checksums generated |
 
-Release artifacts are the version 1.9.1 installer, clean public source ZIP and SHA-256 checksums. The original double-click installation dialog remains outside the tested scope.
+Release artifacts are the version 1.9.2 installer, clean public source ZIP and SHA-256 checksums. The original double-click installation dialog remains outside the tested scope.
 
 ## Automated test coverage
 

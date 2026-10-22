@@ -1,78 +1,70 @@
-# StudioLive Main Mutes
+# StudioLive Control
 
-**Your StudioLive mixer, a few buttons away.**
+**Your mixer. Your workflow.**
 
-Mute a mic, bring down the music, or fade a channel back in — straight from your Stream Deck. This Windows plugin connects directly to a PreSonus StudioLive Series III mixer and updates its buttons from the mixer's feedback. No Companion, DAW or extra bridge to keep running.
+Bring the controls you use most to your Stream Deck. StudioLive Control connects directly to your PreSonus StudioLive Series III mixer, so you can adjust your mix from the buttons in front of you.
 
-**Current version: 1.9.1** · [User guide](docs/USER-GUIDE.md) · [What's new](CHANGELOG.md) · [Test report](TEST-REPORT.md)
+Adjust levels, shape fades and keep Talkback within reach. Build a layout around the way you work.
 
-## What you can do
+**Windows · Stream Deck 7.1+ · Version 1.9.2**
 
-- **Mute what you need:** inputs, buses, FX returns, existing mute groups, and individual input-to-Aux/FX sends.
-- **Set a level or take it slowly:** fixed levels, relative steps, smooth fades, and a single button to fade between −∞ and 0 dB.
-- **Find channels by name:** the selection lists show the names from your mixer and follow live renames.
-- **Make the buttons yours:** use mixer colors or choose a custom color for each button. Mutes stay red and unavailable targets stay gray.
-- **Use additional inputs:** A1, A2, Tape and Talkback are together under **Additional inputs**.
+[Get started](#get-connected) · [User guide](docs/USER-GUIDE.md) · [Changelog](CHANGELOG.md)
 
-Input selection runs from 1 to 64. Each target becomes usable when the connected mixer supplies valid feedback for it. The plugin also works with complete 16-, 24- and 32-input banks; it doesn't expect a smaller mixer to have 64 inputs.
+## Control that fits your session
+
+### The right controls, within reach
+
+Set levels, make small adjustments, run smooth fades or switch mutes. Work with inputs, buses, FX returns and existing mute groups. A1, A2, Tape and Talkback sit together under **Additional inputs**.
+
+### A clear view of your mix
+
+Buttons follow the mixer's feedback. Channel names help you find the right input, mixer colors keep the layout familiar, and custom names and colors let you make it your own.
+
+### One direct connection
+
+The plugin talks to your mixer over its control network. Save its address once and use it across your buttons, folders and profiles. No extra bridge application is needed.
+
+## Available today
+
+| Control | What you can do |
+|---|---|
+| **Levels & fades** | Set a fixed level, adjust by a relative step, fade between −∞ and 0 dB, or stop a fade. |
+| **Inputs & buses** | Select inputs 1–64, A1/A2, Tape, Talkback, Main, Sub, Mix buses and FX buses/returns. |
+| **Mutes & sends** | Control target mutes, existing mute groups and individual input-to-Aux/FX send mutes. |
+| **Button layout** | Follow live mixer names and colors, or choose your own display name and color per key. |
+
+Available controls depend on the state your mixer provides. A target without valid feedback stays **UNKNOWN**. Find the exact ranges and behavior in the [user guide](docs/USER-GUIDE.md).
+
+## More to come
+
+More mixer functions will follow. The focus stays the same: useful controls, clear feedback and a workflow that feels natural.
+
+The table above reflects what's available now. Follow the [changelog](CHANGELOG.md) as the plugin develops.
 
 ## Get connected
 
-You'll need Windows 10 or 11, Stream Deck 7.1 or later, and access to your mixer's **control network** on TCP port 53000. Stream Deck supplies the plugin's Node.js runtime.
+You'll need **Windows 10 or 11**, **Stream Deck 7.1 or later**, and a mixer reachable on its **control network** via TCP port **53000**.
 
-1. With Stream Deck running, double-click `de.local.studiolive-mutes.streamDeckPlugin`. Use a published release asset if available, or build the installer locally with the commands below.
-2. Drag **Mute / Group / Send** or **Level / Fade** onto a key.
-3. In the button settings, enter your mixer IPv4 address and click **Save mixer IP for all buttons**. Wait for **Mixer IP saved on this computer**.
-4. Pick a target and an operation. That's it — the key follows the mixer's state.
+1. Install `de.local.studiolive-mutes.streamDeckPlugin` with Stream Deck running. Use a release asset if available, or [build it yourself](docs/PUBLISHING.md).
+2. Add **Mute / Group / Send** or **Level / Fade** from the **StudioLive Control** category.
+3. Enter your mixer IPv4 address and click **Save mixer IP for all buttons**. Wait for the save confirmation.
+4. Choose a target and operation. You're ready to build your layout.
 
-The address is shared across buttons, folders and profiles and is remembered on this Windows account. Existing button assignments, names and saved addresses remain compatible. Adding a button or opening its settings doesn't send a mixer control command.
+Your address is remembered on this Windows account. Existing profiles and button assignments remain compatible.
 
-## A few useful starting points
+For a first fade, choose **Level / Fade → Set fixed level / Fade**, select your target level and set a duration. For one-button out/in control, choose **Toggle fade −∞ / 0 dB**. Its return level is always **0 dB**; displayed dB values are approximate.
 
-| You want to… | Set up the button like this |
-|---|---|
-| Toggle a microphone mute | **Mute / Group / Send** → **Input · Main** → your channel → **Toggle mute** |
-| Fade music all the way down | **Level / Fade** → your input → **Set fixed level / Fade** → **Target −∞** → duration **3 s** |
-| Fade out and back in with one key | **Level / Fade** → **Toggle fade −∞ / 0 dB** → your duration |
-| Control Tape or Talkback | Choose **Additional inputs**, then select **Tape** or **Talkback** |
-| Mute a monitor bus | **Mute / Group / Send** → **Mix bus** → your bus → **Mute on** |
+## Compatibility
 
-The toggle fade always comes back to **0 dB**. For another return level, use a fixed-level button. Levels are approximate and shown with **≈**; see the [level and fade guide](docs/USER-GUIDE.md#levels-and-fades) for the details.
+Read-only hardware checks used a **StudioLive 24 Series III** reporting **32 logical inputs**. Automated control tests cover 16-, 24-, 32- and 64-input simulators and the additional inputs. Real 64S and additional-input control-write acceptance are still open. See the [test report](TEST-REPORT.md) for the full scope.
 
-## Read the key at a glance
+This is an independent, unofficial project and is not affiliated with PreSonus or Elgato.
 
-**MUTE** means the selected mute is on. **OPEN** means that mute is off — another part of the signal path can still silence the audio. **WAIT / FADE** and a yellow border show pending work. **FADE --** means the configured fade has nothing to change.
+## Go further
 
-**UNKNOWN** means that target hasn't supplied valid state. **OFFLINE** means the connection is down. Neither sends control commands when pressed. Start with the [troubleshooting guide](docs/USER-GUIDE.md#when-something-looks-wrong) if a key stays gray.
+- [User guide](docs/USER-GUIDE.md) — setup, controls, colors and troubleshooting.
+- [Build & publish](docs/PUBLISHING.md) — create an installer from source.
+- [Architecture](docs/ARCHITECTURE.md) — connections, state and command handling.
+- [Test report](TEST-REPORT.md) — verified behavior and hardware limits.
 
-## Compatibility, honestly
-
-Read-only hardware checks used a **StudioLive 24 Series III**, reporting firmware **3.4.0.111374** and **32 logical inputs**. The user has reported working controls. Automated control tests use simulators, including a 64-input mixer and the additional inputs; real 64S and additional-input write acceptance are still open.
-
-This is an unofficial project, independent of PreSonus and Elgato. The [test report](TEST-REPORT.md) explains what has been checked and where hardware verification is still needed.
-
-## Build it yourself
-
-Install Node.js **22.23 or later** and npm, then run these commands from the repository folder:
-
-```powershell
-npm ci
-npm run typecheck
-npm test
-npm run validate
-npm run check:public
-npm run pack
-```
-
-The installer lands in `release/`. Tests use local simulators; the SDK integration test needs localhost TCP port 53000 to be free. The build targets Stream Deck's Node.js 20 runtime.
-
-For source archives, checksums and release steps, see [Publishing](docs/PUBLISHING.md). For local development and the connection model, see [Architecture](docs/ARCHITECTURE.md).
-
-## Keep exploring
-
-- [User guide](docs/USER-GUIDE.md) — target ranges, fades, colors, Multi-Actions and troubleshooting.
-- [Changelog](CHANGELOG.md) — changes by version.
-- [Test report](TEST-REPORT.md) — automated checks and recorded hardware observations.
-- [Architecture](docs/ARCHITECTURE.md) — how the plugin handles state, commands and reconnects.
-
-Released under the [MIT license](LICENSE). Protocol handling and the fader curve build on Andrew Wong's MIT-licensed [StudioLive API](https://github.com/featherbear/presonus-studiolive-api). Full credits and bundled dependency licenses are in [Third-party notices](THIRD_PARTY_NOTICES.md).
+[MIT licensed](LICENSE). Protocol handling and the fader curve build on Andrew Wong's [StudioLive API](https://github.com/featherbear/presonus-studiolive-api). See [Third-party notices](THIRD_PARTY_NOTICES.md) for credits and dependency licenses.
