@@ -1,9 +1,9 @@
-import { channelNumber } from './types.js';
-export type TargetKind = 'line' | 'main' | 'sub' | 'aux' | 'fxbus' | 'fxreturn' | 'group' | 'auxsend' | 'fxsend';
+import { channelNumber, MAX_INPUT_CHANNELS } from './types.js';
+export type TargetKind = 'line' | 'auxinput' | 'tape' | 'talkback' | 'main' | 'sub' | 'aux' | 'fxbus' | 'fxreturn' | 'group' | 'auxsend' | 'fxsend';
 export type Target = { kind: TargetKind; channel: number; mix: number };
 export type LevelOperation = 'set' | 'step' | 'stop' | 'toggle';
 export type LevelRequest = { target: Target; operation: LevelOperation; db: number; durationMs: number };
-const limits: Record<TargetKind, number> = { line:24, main:1, sub:4, aux:16, fxbus:4, fxreturn:4, group:8, auxsend:24, fxsend:24 };
+const limits: Record<TargetKind, number> = { line:MAX_INPUT_CHANNELS, auxinput:2, tape:1, talkback:1, main:1, sub:4, aux:16, fxbus:4, fxreturn:4, group:8, auxsend:MAX_INPUT_CHANNELS, fxsend:MAX_INPUT_CHANNELS };
 function integer(input: unknown, max: number): number {
   const value = typeof input === 'string' && /^\d+$/.test(input) ? Number(input) : input;
   if (typeof value !== 'number' || !Number.isInteger(value) || value < 1 || value > max) throw new Error('Invalid target number.');
@@ -17,6 +17,8 @@ export function target(kind: unknown = 'line', channel: unknown = 1, mix: unknow
 export function validateTarget(input: Target): Target { return target(input.kind, input.channel, input.mix); }
 export function basePath(input: Target): string {
   const t = validateTarget(input);
+  if(t.kind==='auxinput') return `return/ch${t.channel}`;
+  if(t.kind==='tape') return 'return/ch3';
   return t.kind === 'group' ? `mutegroup/mutegroup${t.channel}` : `${t.kind.endsWith('send') ? 'line' : t.kind}/ch${t.channel}`;
 }
 export function mutePath(t: Target): string {
@@ -29,18 +31,22 @@ export function levelPath(t: Target): string {
   return `${basePath(t)}/volume`;
 }
 export function targetLabel(t: Target): string {
-  const labels: Record<TargetKind,string> = {line:'CHANNEL', main:'MAIN', sub:'SUB', aux:'AUX', fxbus:'FX BUS', fxreturn:'FX RETURN', group:'MUTE-GRP', auxsend:'CHANNEL', fxsend:'CHANNEL'};
+  if(t.kind==='auxinput') return `A${t.channel}`;
+  if(t.kind==='tape') return 'TAPE';
+  if(t.kind==='talkback') return 'TALKBACK';
+  const labels: Record<Exclude<TargetKind,'auxinput'|'tape'|'talkback'>,string> = {line:'CHANNEL', main:'MAIN', sub:'SUB', aux:'AUX', fxbus:'FX BUS', fxreturn:'FX RETURN', group:'MUTE-GRP', auxsend:'CHANNEL', fxsend:'CHANNEL'};
   return `${labels[t.kind]} ${t.channel}`;
 }
 export function targetScope(t: Target): string {
+  if(['auxinput','tape','talkback'].includes(t.kind)) return 'INPUT';
   return t.kind === 'auxsend' ? `SEND → AUX ${t.mix}` : t.kind === 'fxsend' ? `SEND → FX ${'ABCD'[t.mix-1]}` : t.kind === 'group' ? 'MIXER GROUP' : t.kind === 'line' ? 'MAIN' : 'BUS / RETURN';
 }
 /** Only parameters needed by this plugin are retained. No arbitrary write paths. */
 export function parameterKind(path: string): 'boolean' | 'number' | 'string' | 'color' | undefined {
-  if (/^(line\/ch(?:[1-9]|1\d|2[0-4])|main\/ch1|sub\/ch[1-4]|aux\/ch(?:[1-9]|1[0-6])|fxbus\/ch[1-4]|fxreturn\/ch[1-4])\/(mute|volume|username|name|color)$/.test(path)) {
+  if (/^(line\/ch(?:[1-9]|[1-5]\d|6[0-4])|return\/ch[1-3]|talkback\/ch1|main\/ch1|sub\/ch[1-4]|aux\/ch(?:[1-9]|1[0-6])|fxbus\/ch[1-4]|fxreturn\/ch[1-4])\/(mute|volume|username|name|color)$/.test(path)) {
     const key=path.split('/').at(-1); return key==='mute'?'boolean':key==='volume'?'number':key==='color'?'color':'string';
   }
-  if (/^line\/ch(?:[1-9]|1\d|2[0-4])\/assign_(aux(?:[1-9]|1[0-6])|fx[1-4])$/.test(path)) return 'boolean';
+  if (/^line\/ch(?:[1-9]|[1-5]\d|6[0-4])\/assign_(aux(?:[1-9]|1[0-6])|fx[1-4])$/.test(path)) return 'boolean';
   if (/^mutegroup\/mutegroup[1-8]$/.test(path)) return 'boolean';
   if (/^mutegroup\/mutegroup[1-8]username$/.test(path)) return 'string';
   return undefined;

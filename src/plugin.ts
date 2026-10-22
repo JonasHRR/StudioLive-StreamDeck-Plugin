@@ -31,10 +31,27 @@ class MuteAction extends DeckAction {constructor(){super('mute');}}
 class LevelAction extends DeckAction {constructor(){super('level');}}
 streamDeck.actions.registerAction(new MuteAction());
 streamDeck.actions.registerAction(new LevelAction());
+let namesSubscription:{actionId:string;requestId:string;last?:string}|undefined;
+function publishTargetNames():void {
+  const subscription=namesSubscription;
+  if(!subscription)return;
+  if(streamDeck.ui.action?.id!==subscription.actionId){namesSubscription=undefined;return;}
+  const names=mixer.targetNames(),serialized=JSON.stringify(names);
+  if(serialized===subscription.last)return;
+  subscription.last=serialized;
+  void streamDeck.ui.sendToPropertyInspector({type:'targetNames',requestId:subscription.requestId,names}).catch(()=>{subscription.last=undefined;});
+}
+mixer.on('change',publishTargetNames);
+streamDeck.ui.onDidDisappear(()=>{if(streamDeck.ui.action?.id!==namesSubscription?.actionId)namesSubscription=undefined;});
 streamDeck.settings.onDidReceiveGlobalSettings(ev => {void mixerSettings.changed(ev.settings).catch(()=>streamDeck.logger.error('Mixer address could not be saved locally.'));});
 streamDeck.ui.onSendToPlugin(ev=>{
   const payload=ev.payload;
-  if(!payload || typeof payload!=='object' || Array.isArray(payload) || payload.type!=='mixerSettings' || typeof payload.requestId!=='string')return;
+  if(!payload || typeof payload!=='object' || Array.isArray(payload) || typeof payload.requestId!=='string')return;
+  if(payload.type==='targetNames'){
+    if(payload.requestId.length>128 || streamDeck.ui.action?.id!==ev.action.id)return;
+    namesSubscription={actionId:ev.action.id,requestId:payload.requestId};publishTargetNames();return;
+  }
+  if(payload.type!=='mixerSettings')return;
   const requestId=payload.requestId;
   const work=payload.operation==='save'?mixerSettings.save(payload.ip):payload.operation==='load'?mixerSettings.load():undefined;
   if(!work)return;

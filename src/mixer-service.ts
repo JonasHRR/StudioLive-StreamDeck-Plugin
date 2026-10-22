@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
-import { channelNumber, ipv4, mode, type MixerTransport, type Snapshot, type Status, type TransportFactory, type ParameterValue } from './types.js';
-import { basePath, dbToLevel, invertedMute, levelPath, levelRequest, mainChannel, mutePath, parameterKind, relativeLevel, target, toggleLevelDb, type LevelRequest, type Target } from './controls.js';
+import { channelNumber, hasCompleteInputState, ipv4, MAX_INPUT_CHANNELS, mode, type MixerTransport, type Snapshot, type Status, type TransportFactory, type ParameterValue } from './types.js';
+import { basePath, dbToLevel, invertedMute, levelPath, levelRequest, mainChannel, mutePath, parameterKind, relativeLevel, target, toggleLevelDb, type LevelRequest, type Target, type TargetKind } from './controls.js';
 
 type Writable = boolean | number;
 type Fade = { path:string; epoch:number; abort:AbortController; expected:number[]; destination:number };
@@ -60,11 +60,11 @@ export class MixerService extends EventEmitter {
       disconnected:reason=>{if(active()) this.lost(reason);}
     }).then(values=>{
       if(!active()) return;
-      if(!this.complete(values)) {this.lost('Not all 24 channel states are known.'); return;}
+      if(!this.complete(values)) {this.lost('Initial input mute state is incomplete.'); return;}
       this.adopt(values); this.status='online'; this.reason='Mixer state received.'; this.failures=0; this.emit('change');
     }).catch(()=>{if(active()) this.lost('Connection or initial state failed.');});
   }
-  private complete(values:Snapshot): boolean {return Array.from({length:24},(_,i)=>i+1).every(ch=>typeof values.get(ch)==='boolean');}
+  private complete(values:Snapshot): boolean {return hasCompleteInputState(values);}
   private lost(reason:string): void {
     this.epoch++; const old=this.transport; this.transport=undefined;
     this.cancel('Execution unconfirmed; queue discarded.'); old?.close();
@@ -88,6 +88,11 @@ export class MixerService extends EventEmitter {
     const base=basePath(t);
     const value=this.parameters.get(t.kind==='group'?`${base}username`:`${base}/username`) || this.parameters.get(`${base}/name`);
     return typeof value==='string' ? value : undefined;
+  }
+  targetNames():Record<string,string[]> {
+    if(this.status!=='online')return {};
+    const kinds:[TargetKind,number][]=[['line',MAX_INPUT_CHANNELS],['auxinput',2],['tape',1],['talkback',1],['main',1],['sub',4],['aux',16],['fxbus',4],['fxreturn',4],['group',8]];
+    return Object.fromEntries(kinds.map(([kind,count])=>[kind,Array.from({length:count},(_,i)=>this.name(target(kind,i+1))?.trim() ?? '')]));
   }
   view(channel:number): ChannelView {return this.viewTarget(target('line',channel));}
   viewTarget(t:Target, level=false): ChannelView {

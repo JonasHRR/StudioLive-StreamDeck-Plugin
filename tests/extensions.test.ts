@@ -19,6 +19,16 @@ async function setup(t:test.TestContext) {
 }
 const request=(db:number,durationMs=0,operation:'set'|'step'|'stop'|'toggle'='set')=>levelRequest(target(),operation,db,durationMs);
 
+test('bounded target-name catalog prefers mixer usernames, includes buses/groups and clears offline',async t=>{
+ const {service,mixer}=await setup(t);
+ const names=service.targetNames();assert.equal(names.line.length,64);assert.equal(names.line[24],'');assert.equal(names.aux.length,16);assert.equal(names.fxbus.length,4);
+ assert.equal(names.line[0],'Input 1');assert.equal(names.group[0],'Band');assert.equal(names.main[0],'Bus');assert.equal(names.aux[1],'');
+ mixer.externalParameter('line/ch1/name','Default');mixer.externalParameter('line/ch1/username','Custom');assert.equal(service.targetNames().line[0],'Custom');
+ mixer.externalParameter('line/ch1/username','');assert.equal(service.targetNames().line[0],'Default');
+ mixer.externalParameter('aux/ch16/username','Monitor 16');assert.equal(service.targetNames().aux[15],'Monitor 16');
+ service.stop();assert.deepEqual(service.targetNames(),{});assert.equal(mixer.parameterWrites.length,0);
+});
+
 test('zero dB steps preserve every confirmed position and send no level writes',async t=>{
  const {service,mixer}=await setup(t);
  for(const current of [0,1/65535,0.005,dbToLevel(-60),dbToLevel(-6),dbToLevel(0),1]){
@@ -91,7 +101,7 @@ test('target paths, send inversion and strict write allowlist',()=>{
   assert.equal(mutePath(target('auxsend',24,16)),'line/ch24/assign_aux16');
   assert.equal(mutePath(target('fxsend',1,4)),'line/ch1/assign_fx4');
   for(const kind of ['main','sub','aux','fxbus','fxreturn']) assert.equal(mutePath(target(kind)),`${kind}/ch1/mute`);
-  for(const input of [()=>target('group',9),()=>target('line',25),()=>target('auxsend',1,17),()=>target('__proto__'),()=>levelPath(target('group')),()=>parameterPacket('line/ch1/48v',true),()=>parameterPacket('line/ch1/volume',NaN),()=>levelRequest(target(),'set',-70,0),()=>levelRequest(target(),'set',0,Infinity)]) assert.throws(input);
+  for(const input of [()=>target('group',9),()=>target('line',65),()=>target('auxsend',1,17),()=>target('__proto__'),()=>levelPath(target('group')),()=>parameterPacket('line/ch1/48v',true),()=>parameterPacket('line/ch1/volume',NaN),()=>levelRequest(target(),'set',-70,0),()=>levelRequest(target(),'set',0,Infinity)]) assert.throws(input);
   assert.equal(parameterKind('line/ch1/dca/volume'),undefined);
 });
 test('snapshot names/groups/faders and PV/PS/MS decode independently; DCA never overrides fader',()=>{

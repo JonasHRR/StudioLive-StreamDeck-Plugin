@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.9.1
+
+- Group A1, A2, Tape and Talkback under one Additional inputs target type for both mute and level/fade actions.
+- Rename Aux / FlexMix bus to Mix bus.
+- Preserve existing saved target identifiers and channel numbers, including name/color settings and live list updates.
+- Refresh the README with a quick setup and examples, add a full user guide, and simplify architecture and publishing documentation.
+
+## 1.9.0
+
+- Add stereo Aux inputs A1/A2, Tape and Talkback as separate mute and level/fade targets, with mixer names/colors and custom button colors.
+- Map A1/A2/Tape to the three verified return inputs and Talkback to its own input; retain live PV/PS/PC and MS feedback.
+- Keep existing channel assignments and output-bus ranges; missing optional inputs remain UNKNOWN and reject commands.
+- Verify parameter presence through a read-only hardware subscription. Seven added tests and extended SDK coverage exercise controls against simulators; talk destinations, routing, gain and phantom controls remain unavailable.
+
+## 1.8.0
+
+- Expand input selection, names, colors, mute/level/fade controls and send-source paths to channels 1–64.
+- Decode high-channel snapshots, PV/PS/PC and MS fader feedback; reject channel 65 and unrelated control paths.
+- Validate the actual declared input bank instead of a fixed 24-channel count; unavailable inputs remain UNKNOWN and reject commands.
+- Read-only verification confirms 32 logical inputs on the existing mixer; 64-input controls and reconnect are tested against simulators.
+
+## 1.7.0
+
+- Append mixer names to channel, bus, return, mute-group and Aux/FX send-destination selections.
+- Refresh names live from the shared mixer connection, with numeric fallback while offline or unnamed.
+- Preserve numeric assignments and in-progress edits; send name updates only to the current inspector session when the catalog changes.
+
 ## 1.6.1
 
 - Keep a relative 0 dB step unchanged at every confirmed fader position, including values below −60 dB; no level command is sent.

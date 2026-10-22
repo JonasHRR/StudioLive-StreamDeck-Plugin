@@ -1,10 +1,16 @@
 export type Mode = 'toggle' | 'on' | 'off';
 export type Status = 'offline' | 'connecting' | 'online' | 'invalid';
 export type ParameterValue = boolean | number | string;
-export type Snapshot = Map<number, boolean> & { parameters?: Map<string, ParameterValue> };
+export const MAX_INPUT_CHANNELS=64;
+export type Snapshot = Map<number, boolean> & { parameters?: Map<string, ParameterValue>; inputCount?:number };
+export function hasCompleteInputState(values:Snapshot):boolean {
+  const count=values.inputCount ?? values.size;
+  return [16,24,32,64].includes(count) && values.size===count && Array.from({length:count},(_,i)=>i+1).every(channel=>typeof values.get(channel)==='boolean');
+}
 export function copySnapshot(values: Snapshot): Snapshot {
   const copy: Snapshot = new Map(values);
   if (values.parameters) copy.parameters = new Map(values.parameters);
+  if(values.inputCount!==undefined)copy.inputCount=values.inputCount;
   return copy;
 }
 export interface MixerEvents {
@@ -22,7 +28,7 @@ export interface MixerTransport {
 export type TransportFactory = () => MixerTransport;
 export function channelNumber(value: unknown): number {
   const n = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value;
-  if (typeof n !== 'number' || !Number.isInteger(n) || n < 1 || n > 24) throw new Error('Channel must be between 1 and 24.');
+  if (typeof n !== 'number' || !Number.isInteger(n) || n < 1 || n > MAX_INPUT_CHANNELS) throw new Error('Channel must be between 1 and 64.');
   return n;
 }
 export function ipv4(value: unknown): string {

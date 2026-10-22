@@ -1,7 +1,7 @@
 import { Socket } from 'node:net';
 import { randomBytes } from 'node:crypto';
 import { decodeMute, decodeParameter, decodeFaders, decodeState, Framer, jsonPacket, MAX_STATE, mutePacket, parameterPacket, packet } from './protocol.js';
-import { channelNumber, copySnapshot, ipv4, type ParameterValue, type MixerEvents, type MixerTransport, type Snapshot } from './types.js';
+import { channelNumber, copySnapshot, hasCompleteInputState, ipv4, type ParameterValue, type MixerEvents, type MixerTransport, type Snapshot } from './types.js';
 
 /** One owned socket per attempt. No discovery, UDP metering or library reconnect loop. */
 export class StudioLiveTransport implements MixerTransport {
@@ -33,7 +33,7 @@ export class StudioLiveTransport implements MixerTransport {
       };
       const tryReady = () => {
         if (!subscribed || !values || this.ready || this.ended) return;
-        if (values.size !== 24) { fail('Initial state does not contain all 24 input mutes.'); return; }
+        if (!hasCompleteInputState(values)) { fail('Initial input mute state is incomplete.'); return; }
         this.ready = true; clearTimeout(this.deadline); this.failOpen = undefined;
         lastReply = Date.now();
         this.heartbeat = setInterval(() => {
@@ -49,7 +49,7 @@ export class StudioLiveTransport implements MixerTransport {
         const next = decodeState(data);
         if (!this.ready) for (const [channel, muted] of early) next.set(channel, muted);
         if (!this.ready) for (const [path,value] of earlyParameters) next.parameters!.set(path,value);
-        if (next.size !== 24) throw new Error('Incomplete mixer state.');
+        if (!hasCompleteInputState(next)) throw new Error('Incomplete mixer state.');
         values = next;
         if (this.ready) events.snapshot(copySnapshot(next));
         tryReady();

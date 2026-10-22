@@ -49,7 +49,7 @@ test('live PC colors are read-only, bounded and do not accept PV/PS or unsupport
   assert.deepEqual(decodeParameter('PC',message('line/ch1/color',bytes)),{path:'line/ch1/color',value:'#12abcd'});
   assert.deepEqual(decodeParameter('PC',message('line.ch1.color',Buffer.alloc(4))),{path:'line/ch1/color',value:''});
   for(const code of ['PV','PS'])assert.equal(decodeParameter(code,message('line/ch1/color',bytes)),undefined);
-  for(const path of ['line/ch25/color','line/ch1/dca/color','mutegroup/mutegroup1/color','line/ch1/48v'])assert.equal(decodeParameter('PC',message(path,bytes)),undefined);
+  for(const path of ['line/ch65/color','line/ch1/dca/color','mutegroup/mutegroup1/color','line/ch1/48v'])assert.equal(decodeParameter('PC',message(path,bytes)),undefined);
   for(const n of [0,3,5])assert.equal(decodeParameter('PC',message('line/ch1/color',Buffer.alloc(n))),undefined);
   assert.throws(()=>parameterPacket('line/ch1/color',0));assert.throws(()=>parameterPacket('aux/ch1/color',true));
 });

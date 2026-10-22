@@ -2,7 +2,7 @@
   "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "UUID": "de.local.studiolive-mutes",
   "Name": "StudioLive Main Mutes",
-  "Version": "1.6.1.0",
+  "Version": "1.9.1.0",
   "Author": "StudioLive Mutes",
   "Description": "Mixer names and colors, channel/bus/send mutes, mute groups, levels and smooth fades with confirmed feedback.",
   "Category": "StudioLive Main Mutes",

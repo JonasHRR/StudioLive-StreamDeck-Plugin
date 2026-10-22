@@ -8,6 +8,7 @@
 <label for="target">Target type</label><select id="target" disabled></select>
 <label for="channel">Channel / Bus / Group</label><select id="channel" disabled></select>
 <div id="sendRow" hidden><label for="mix">Destination Aux / FX</label><select id="mix" disabled></select></div>
+<small>Inputs 1–64, stereo Aux inputs A1/A2, Tape and Talkback are selectable; only targets with confirmed mixer state can be controlled. Lists include mixer names when available and update after a rename. Missing/offline names fall back to target identifiers. Talkback controls its own mute/level; talk destinations and routing are unchanged.</small>
 <label for="colorMode">Button color</label><select id="colorMode" disabled><option value="auto">Mixer color (automatic)</option><option value="custom">Custom color</option></select>
 <div id="colorRow" hidden><label for="customColor">Custom button color</label><input id="customColor" type="color" value="#174e89" style="height:36px;padding:3px" disabled></div>
 <small>Custom color replaces the normal mixer color on this button. MUTE stays red; unknown/offline stays gray. FADE -- lightens the current button color with white. Mixer colors are never changed.</small>

@@ -1,6 +1,52 @@
-# Test report — version 1.6.1
+# Test report — version 1.9.1
 
-Current test date: October 21, 2026; settings persistence checks: October 19; historical mixer and color checks: October 16. This report distinguishes automated simulation, installed Stream Deck inspection, read-only hardware checks and user feedback.
+Checked on October 22, 2026. Start with the summary below for the current scope; the version notes preserve earlier observations and explain how coverage grew.
+
+## What's covered
+
+| Area | Evidence | What it tells us |
+|---|---|---|
+| Automated controls | 74 tests under Node.js 22 and Stream Deck Node.js 20.20.2 | Simulated mute/level/fade commands, reconnects, SDK integration and settings behavior. |
+| Input counts | Simulated 16/24/32/64-input banks; a real 32-input snapshot | Startup uses the declared input bank. Real 64S write acceptance is still open. |
+| A1, A2, Tape, Talkback | Read-only hardware fields plus simulator control tests | The real mixer exposes the parameters; real control-write acceptance remains open. |
+| Stream Deck UI | Recorded live editor inspections | Names, colors and selections appeared correctly; these inspections didn't trigger real controls. |
+| Levels | User-confirmed 0 dB position read from a StudioLive 24 | The unity anchor is checked. Other dB values and models remain approximate. |
+
+Hardware observations used a StudioLive 24 Series III reporting firmware 3.4.0.111374. The user reported working controls; automated write tests use simulators. Earlier 24-channel counts reflect the old decoder's limit, not the mixer's full logical input count.
+
+For day-to-day setup, see the [user guide](docs/USER-GUIDE.md). The sections below are the verification record, including historical behavior that later versions changed.
+
+## 1.9.1: grouped additional inputs
+
+Both inspectors now show one Additional inputs type with A1, A2, Tape and Talkback in its input list, and label the existing Aux / FlexMix output category Mix bus. The UI maps the four entries to their established stored target/channel pairs. The updated inspector regression covers all four saved assignments in both action types, restored selections, live name updates without resetting an in-progress edit or visible entry, retained fade/custom-color preferences, and existing bus 16 compatibility. No mixer paths or control behavior changed. All 74 tests passed under development Node.js 22 and Stream Deck Node.js 20.20.2.
+
+Reopening the installed inspectors loaded the updated UI without restarting the unchanged mixer runtime. Live inspection showed one Additional inputs category and Mix bus in the target list. An existing Talkback button restored its correct fourth input selection; its list contained all four inputs with received mixer names. Lists were closed without changing assignments or triggering controls, and the originally selected level button was selected again. Official validation and public-file checks passed; version 1.9.1 installer, source archive and checksums were regenerated.
+
+## 1.9.0: stereo Aux, Tape and Talkback inputs
+
+A read-only subscription on October 22 confirmed `return/ch1` (Aux In 1), `return/ch2` (Aux In 2), `return/ch3` (Tape In) and `talkback/ch1` (Talkback), each with mute, volume, username, name and color fields. The plugin exposes A1/A2, Tape and Talkback as separate target types without renumbering regular inputs or changing output-bus/send ranges. Each stereo Aux input is one target. Talkback controls its own mute/level and does not configure talk destinations, routing, gain or phantom power. No real control writes were performed.
+
+Seven added tests cover exact path mappings, boundary rejection, read-only metadata and disallowed controls, snapshots and PV/PS/PC/MS feedback, all four simulated mute/level/relative/toggle fade targets, duplicate buttons, live names/colors, custom colors, missing optional targets, TCP integration and inspector persistence. The bundled SDK WebSocket/TCP test additionally operates all four targets against the simulator. All 74 tests passed under development Node.js 22 and the installed Stream Deck Node.js 20.20.2. Real control acceptance for these inputs remains open.
+
+A full Stream Deck restart loaded a fresh plugin process with version 1.9.0.0 and recovered the mixer connection. Live editor inspection temporarily selected the stereo Aux, Tape and Talkback types on an existing mute button. The A1/A2 list showed live username/default-name feedback; the selected inputs displayed their own names, colors and OPEN/MUTE states. The original Input · Main / channel 1 assignment and appearance were restored. Only editor settings were changed; no real control key was triggered. Official validation and public-file checks passed; the installer, public source archive and checksums were regenerated.
+
+## 1.8.0: inputs through channel 64
+
+Input and send-source ranges now cover 1–64 in validation, paths, snapshots, PV/PS/PC feedback, MS fader batches, name catalogs and both inspectors. Existing bus/send destination limits are unchanged. Channel 65 and unrelated parameters remain rejected. A shared completeness check validates the declared contiguous 16/24/32/64-input bank, with snapshot metadata retained across copies; smaller mixers are not required to report 64 inputs. Missing last mutes or holes in a declared bank reject startup. Absent optional inputs remain UNKNOWN and do not send commands.
+
+Seven new tests cover encoding/feedback boundaries, declared snapshot completeness, metadata copies, high-channel batch indices and names/colors, model-size service startup, duplicate high-channel buttons, unavailable-target rejection, 64-option inspectors and 32/64-input TCP simulator controls/reconnect without replay. Existing 24-input tests remain as compatibility coverage. All 67 tests pass under both runtimes.
+
+A separate read-only subscription to the real mixer confirmed 32 declared and valid input mute states, input-32 level feedback, and no input-64 mute state. Earlier 24-channel counts in historical reports were limited by the old decoder and do not describe the full logical input capacity. No real mute/fader/send writes were performed. Real 64S control acceptance remains open; the 64-input results above are simulation evidence.
+
+After restarting Stream Deck, the new plugin process reported version 1.8.0.0 and recovered the existing mixer connection. The input list was opened and scrolled to its final No. 64 option, then closed with Escape; its original No. 1 assignment remained selected. Names continued to appear for the real mixer inputs. No target setting or real mixer control was changed. Official validation and source/runtime publication checks passed; release artifacts were regenerated.
+
+## 1.7.0: mixer names in target selections
+
+Channel/bus/group lists append the mixer's username or default name, retaining the original numeric option values. Input send actions reuse input names and label their Aux/FX destinations from bus names. The bounded catalog comes from existing confirmed state, clears offline, and is sent only to the active inspector session. Repeated unchanged catalogs are suppressed. The inspector updates only option labels and retains selections and unfinished edits elsewhere; names remain transient and are never stored as target settings.
+
+Two new tests cover catalog limits, username/default precedence, bus/group names, offline clearing, destination mapping, numeric values, stale-session rejection and edit preservation. The existing bundled SDK integration verifies initial catalog delivery, live PS rename feedback, stopping updates when the inspector closes, and a new inspector session receiving current names. All 60 tests pass under both supported runtimes, including the existing zero-step regression. Tests use simulators and do not control the real mixer.
+
+A fresh Stream Deck process confirmed version 1.7.0.0. Live inspection of the opened input list showed No. 1 · Mic 1 and No. 2 · Mic 2, followed by the corresponding received mixer names. The saved channel remained 1. The agent did not change target settings, rename channels or trigger mixer controls during this inspection. Official validation and publication checks passed; installer, clean public sources and checksums were regenerated.
 
 ## 1.6.1: source review and zero-step regression
 
@@ -80,21 +126,21 @@ The source and installer now use `192.0.2.1`, a documentation-only default. The 
 
 ## Environment and checks
 
-Windows 11 Pro 23H2, build 22631.6199; Stream Deck 7.6.0.23012 with a normal 15-key device. Development Node.js 22.23.2/npm 10.9.8; the currently installed Stream Deck runtime is Node.js 20.20.2 (previous checks used 20.20.0). The 57 current tests were executed with 20.20.2. SDK 3.0.2, CLI 1.10.2 and the StudioLive API development reference 1.9.1 remain pinned. No new npm dependencies were added.
+Windows 11 Pro 23H2, build 22631.6199; Stream Deck 7.6.0.23012 with a normal 15-key device. Development Node.js 22.23.2/npm 10.9.8; the currently installed Stream Deck runtime is Node.js 20.20.2 (previous checks used 20.20.0). The 74 current tests were executed with 20.20.2. SDK 3.0.2, CLI 1.10.2 and the StudioLive API development reference 1.9.1 remain pinned. No new npm dependencies were added.
 
 | Check | Result |
 |---|---|
 | Type checking | Passed |
-| Automated tests under Node.js 22 | 57 of 57 passed |
-| Built tests under Stream Deck Node.js 20.20.2 | 57 of 57 passed |
+| Automated tests under Node.js 22 | 74 of 74 passed |
+| Built tests under Stream Deck Node.js 20.20.2 | 74 of 74 passed |
 | Build targeting Node.js 20 | Passed |
 | Official Elgato manifest/file validation | Passed |
 | English live button and inspector inspection | Passed; existing mixer connection and settings retained |
 | Public-file checks | Source and built plugin passed |
 | Clean public source ZIP (1.2.0) | Extracted, dependencies installed from the pinned lockfile using the local offline npm cache; build, public-file check and CLI validation passed |
-| Official packaging and release files | Version 1.4.0.0 installer, public source ZIP and SHA-256 checksums generated |
+| Official packaging and release files | Version 1.9.1.0 installer, public source ZIP and SHA-256 checksums generated |
 
-Release artifacts are the version 1.4.0 installer, clean public source ZIP and SHA-256 checksums. The original double-click installation dialog remains outside the tested scope.
+Release artifacts are the version 1.9.1 installer, clean public source ZIP and SHA-256 checksums. The original double-click installation dialog remains outside the tested scope.
 
 ## Automated test coverage
 

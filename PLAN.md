@@ -52,3 +52,19 @@ Version 1.6.0 adds per-button automatic/custom colors to both action types. Cust
 ## GitHub source review
 
 Version 1.6.1 fixes relative zero steps below the regular −60 dB target range, preserving exact confirmed positions without sending writes. The new service regression and extended label check failed before the fix. Type checking, all 58 tests under both runtimes, Elgato validation, publication checks and a full npm audit passed. Corrected the README source-archive version and retained the CLI packaging ignore rules in source exports. Created a local Git history from the clean publication inventory; private working files remain excluded.
+
+## Mixer names in selection lists
+
+Version 1.7.0 appends live mixer names to channel/bus/group/return selections and Aux/FX destinations, while retaining numeric assignments and unfinished inspector edits. Added a bounded online-only name catalog, one active inspector subscription with a session nonce and deduplicated updates, and numeric fallback without cached stale names. Two new tests and expanded SDK integration cover mappings, live renames, offline state and inspector lifecycle; all 60 tests include the preserved 1.6.1 zero-step fix.
+
+## Inputs through channel 64
+
+Version 1.8.0 expands input and send-source handling consistently to 64, while preserving destination limits and strict unknown-target rejection. Snapshot metadata and a shared completeness check support smaller banks without demanding nonexistent channels. Seven new tests exercise high-channel controls, feedback, names/colors, incomplete snapshots and 32/64 TCP reconnects. A real read-only subscription confirmed 32 logical inputs and input-32 level feedback; 64S write acceptance is not claimed. Updated documentation and release artifacts.
+
+## Additional inputs — October 22, 2026
+
+Version 1.9.0 adds A1/A2 stereo Aux inputs, Tape and Talkback with own mute/level/fade controls, names and colors. A read-only subscription confirmed the exact return/talkback paths and supported fields. Seven added tests and extended bundled SDK coverage exercise all four inputs against simulators, including unavailable-target rejection and numeric inspector assignments. Regular input numbering and bus/send limits are retained; talk destinations, routing, gain and phantom controls are excluded. Updated English documentation and release artifacts.
+
+## Grouped additional inputs — October 22, 2026
+
+Version 1.9.1 groups A1/A2, Tape and Talkback under Additional inputs in both action inspectors and renames Aux / FlexMix bus to Mix bus. Existing stored kinds/channel numbers remain unchanged. Updated inspector coverage verifies saved assignments, names and selection retention; control behavior remains covered by the existing simulator tests. Updated English documentation and release files.

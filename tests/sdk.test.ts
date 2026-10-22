@@ -38,6 +38,22 @@ test('bundled plugin registers via real SDK WebSocket; rendering, external feedb
     return svg.includes(`>${text}<`);
   });
   send('willAppear','a'); send('willAppear','b'); await until(()=>image('a','OPEN')&&image('b','OPEN'));
+  send('propertyInspectorDidAppear','a');
+  const nameRequest=(context:string,requestId:string)=>host.send(JSON.stringify({event:'sendToPlugin',action:'de.local.studiolive-mutes.channel',context,device:'simdeck',payload:{type:'targetNames',requestId}}));
+  nameRequest('a','names-a');
+  const nameReplies=()=>received.filter(message=>message.event==='sendToPropertyInspector'&&message.payload?.type==='targetNames');
+  await until(()=>nameReplies().some(message=>message.context==='a'&&message.payload.requestId==='names-a'&&message.payload.names.line[0]==='Input 1'));
+  assert.equal(nameReplies().at(-1).payload.names.aux.length,16);assert.equal(fixture.controls.length,0);
+  for(const socket of fixture.sockets)socket.write(packet('PS',Buffer.from('line/ch1/username\0\0\0Lead voice\0')));
+  await until(()=>nameReplies().at(-1)?.payload.names.line[0]==='Lead voice');
+  send('propertyInspectorDidDisappear','a');
+  const nameCount=nameReplies().length;
+  for(const socket of fixture.sockets)socket.write(packet('PS',Buffer.from('line/ch1/username\0\0\0New name\0')));
+  await until(()=>image('b','New name'));
+  assert.equal(nameReplies().length,nameCount);
+  send('propertyInspectorDidAppear','b');nameRequest('b','names-b');
+  await until(()=>nameReplies().some(message=>message.context==='b'&&message.payload.requestId==='names-b'&&message.payload.names.line[0]==='New name'));
+  send('propertyInspectorDidDisappear','b');
   const background=(context:string,color:string)=>received.some(m=>m.event==='setImage'&&m.context===context&&Buffer.from(String(m.payload.image).split(',')[1],'base64').toString().includes(`fill="${color}"`));
   await until(()=>background('a','#112233'));
   for(const socket of fixture.sockets)socket.write(packet('PC',Buffer.concat([Buffer.from('line/ch1/color\0\0\0'),Buffer.from([255,255,128,255])])));
@@ -74,6 +90,16 @@ test('bundled plugin registers via real SDK WebSocket; rendering, external feedb
   const beforeReturn=received.length;
   actionEvent('keyDown','level',toggleFade,true);await until(()=>image('level','≈ 0.0 dB',beforeReturn));
   assert.equal(lastControls().at(-1)!.value,0.74609375);
+  for(const [kind,channel,path,name] of [['auxinput',1,'return/ch1','Aux In 1'],['auxinput',2,'return/ch2','Aux In 2'],['tape',1,'return/ch3','Tape In'],['talkback',1,'talkback/ch1','Talkback']] as const){
+    const settings={target:kind,channel,mode:'toggle'},context=`special-${path}`;
+    actionEvent('willAppear',context,settings);await until(()=>image(context,name));
+    const before=fixture.controls.length;actionEvent('keyDown',context,settings);await until(()=>fixture.controls.length===before+1);
+    assert.equal(lastControls().at(-1)!.path,`${path}/mute`);assert.equal(lastControls().at(-1)!.value,kind==='talkback'?0:1);
+    const levelSettings={target:kind,channel,operation:'set',db:0,duration:0};
+    actionEvent('willAppear',`${context}-level`,levelSettings,true);actionEvent('keyDown',`${context}-level`,levelSettings,true);
+    await until(()=>fixture.controls.length===before+2&&image(`${context}-level`,'≈ 0.0 dB'));
+    assert.deepEqual(lastControls().at(-1),{path:`${path}/volume`,value:0.74609375});
+  }
   assert.equal(errors,'');
 });
 

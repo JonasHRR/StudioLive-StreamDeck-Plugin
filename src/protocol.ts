@@ -1,6 +1,6 @@
 import { inflateSync } from 'node:zlib';
 import { decodeUBJSON } from './ubjson.js';
-import type { Snapshot, ParameterValue } from './types.js';
+import {MAX_INPUT_CHANNELS, type Snapshot, type ParameterValue} from './types.js';
 import { parameterKind } from './controls.js';
 
 export const MAX_STATE = 8 * 1024 * 1024;
@@ -63,8 +63,11 @@ export function decodeState(compressed: Buffer): Snapshot {
     for (const [key,child] of Object.entries(node.children ?? {})) flatten(child,`${prefix}/${key}`.replace(/^\//,''),depth+1);
   }
   flatten(raw,'');
-  for (let channel = 1; channel <= 24; channel++) {
-    const muted = boolean(raw.children?.line?.children?.[`ch${channel}`]?.values?.mute);
+  result.inputCount=0;
+  for (let channel = 1; channel <= MAX_INPUT_CHANNELS; channel++) {
+    const node=raw.children?.line?.children?.[`ch${channel}`];
+    if(node!==undefined)result.inputCount=channel;
+    const muted = boolean(node?.values?.mute);
     if (muted !== undefined) result.set(channel, muted);
   }
   return result;
@@ -136,7 +139,7 @@ export function decodeFaders(data: Buffer): {path:string;value:number}[] {
 export function decodeMute(data: Buffer): { channel: number; muted: boolean } | undefined {
   const end = data.indexOf(0);
   if (end < 0) return;
-  const match = /^line[/.]ch([1-9]|1\d|2[0-4])[/.]mute$/.exec(data.toString('utf8', 0, end));
+  const match = /^line[/.]ch([1-9]|[1-5]\d|6[0-4])[/.]mute$/.exec(data.toString('utf8', 0, end));
   if (!match) return;
   if (data.length !== end + 7) throw new Error('Incomplete mute feedback.');
   const muted = boolean(data.readFloatLE(end + 3));

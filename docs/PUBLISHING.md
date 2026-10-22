@@ -1,16 +1,10 @@
-# Publishing on GitHub
+# From source to a release
 
-## Prepare a clean repository
+This is the release workflow for **StudioLive Main Mutes 1.9.1**. The [repository](https://github.com/JonasHRR/StudioLive-StreamDeck-Plugin) holds the source; installers and source ZIPs are generated locally and attached separately when publishing a GitHub Release.
 
-Use the current `StudioLive-Mutes-1.6.1-source.zip` from `release/`, or regenerate it with the commands in the README. Extract its contents into a new folder. It contains the maintained source, English documentation, pinned dependency lockfile, plugin assets and MIT notices. It does not contain a `.git` directory, personal settings, historical private packages, local research or diagnostics.
+## Build and check
 
-Create a repository on GitHub with a name of your choice and the desired visibility, then upload the extracted contents or push them with Git. The snapshot already includes a README, MIT license, `.gitignore` and `.gitattributes`; a second generated license is unnecessary. Generating the source snapshot does not create a repository or publish anything to your account.
-
-The original development workspace may contain ignored private files and older private installers. Use the clean source snapshot for the initial upload. Do not attach historical private ZIPs or installers to the public repository or a release.
-
-## Reproduce the release
-
-On Windows, install Node.js 22.23 or later and Stream Deck 7.1 or later, then run:
+Use Windows, Node.js **22.23 or later**, npm, and Stream Deck **7.1 or later**. From the repository folder, run:
 
 ```powershell
 npm ci
@@ -23,20 +17,55 @@ npm run source:public
 npm run checksums
 ```
 
-`npm test` builds the plugin first. The SDK integration test uses localhost TCP 53000; the port must be free. To check the actual bundled runtime, run the built tests with Stream Deck's Node.js 20 executable as well.
+Run these in order and stop if a command fails. `npm test` builds first and runs the local simulator suite. Its SDK integration test needs localhost TCP **53000** to be free. Validation uses Elgato's CLI.
 
-`check:public` checks the source inventory and built plugin for private network addresses, personal Windows user paths and private key markers. The source exporter enforces the documentation-only default address and applies the same source checks. These checks cover the files selected for publication, not ignored local folders.
+Also run the built tests with Stream Deck's installed Node.js 20 executable. For the recorded runtime version, PowerShell can do that like this:
 
-## Create a release
+```powershell
+$streamDeckNode = Join-Path $env:APPDATA 'Elgato\StreamDeck\NodeJS\20.20.2\node.exe'
+$testFiles = Get-ChildItem build/tests -Filter '*.test.js' | ForEach-Object FullName
+& $streamDeckNode --test @testFiles
+```
 
-Create a tag such as `v1.6.1`, write release notes from `CHANGELOG.md`, and attach only:
+Adjust the runtime version in the path if your installation differs. Pass the expanded file list: Node.js 20 on Windows doesn't expand the wildcard the same way as the development runtime.
 
-- `de.local.studiolive-mutes.streamDeckPlugin`
-- `StudioLive-Mutes-1.6.1-source.zip`
-- `SHA256SUMS.txt`
+## What goes where
 
-Keep the compatibility and testing scope from `TEST-REPORT.md` clear in the release description. Users must enter their own mixer address after installing. Release files and generated plugin bundles are intentionally ignored by Git.
+The commands produce these files in `release/`:
 
-## Future changes
+| File | Purpose |
+|---|---|
+| `de.local.studiolive-mutes.streamDeckPlugin` | Double-click installer for Stream Deck. |
+| `StudioLive-Mutes-1.9.1-source.zip` | Clean source snapshot, including docs, assets, lockfile and licenses. |
+| `SHA256SUMS.txt` | SHA-256 checksums for the installer and source ZIP. |
 
-Update `package.json`, the root package entry in `package-lock.json`, the runtime plugin `package.json`, and the four-part manifest version together. Keep plugin/action UUIDs stable for existing profiles. Add a changelog entry, rerun validation and checks, and regenerate release checksums. Never include live profile exports, logs or real mixer addresses in issues or fixtures; use documentation-only addresses in examples.
+The source exporter uses an explicit inventory. Local research, logs, settings, old releases, dependencies and generated bundles are excluded. The plugin's `.sdignore` also excludes logs from packaging.
+
+`check:public` scans the chosen source files and built plugin for private network addresses, personal Windows paths and private-key markers. It doesn't scan ignored local folders. Review the staged Git files as well; an ignored file should not become a release asset just because it happens to be in the workspace.
+
+## Push the source
+
+Review `git diff` and `git status`, commit the intended source and documentation changes, then push the branch to the existing repository. Keep `release/` and generated bundles out of Git.
+
+For a separate clean checkout, extract the source ZIP into a new folder. It already includes the README, license, ignore rules and pinned lockfile. Exporting the ZIP itself doesn't publish anything.
+
+## Publish a GitHub Release
+
+Create a tag such as **v1.9.1** for the checked commit, write the notes from the [changelog](../CHANGELOG.md), and attach the three files above to its GitHub Release.
+
+A pushed tag alone doesn't upload the installer. GitHub's automatic source download also doesn't contain the built plugin bundle.
+
+Keep the [test scope](../TEST-REPORT.md) clear in the release notes, especially simulated 64-input coverage and outstanding hardware acceptance. Users enter their own mixer address after installing. Only attach the freshly generated files; older local packages may contain private configuration.
+
+## When the version changes
+
+Update these together:
+
+- `package.json`
+- Both root version entries in `package-lock.json`
+- `de.local.studiolive-mutes.sdPlugin/package.json`
+- The manifest's four-part version, such as `1.9.1.0`
+
+Update the changelog and current documentation examples, rerun the checks, then rebuild the installer, source ZIP and checksums. Keep plugin/action UUIDs stable so existing profiles continue to work.
+
+Use documentation-only addresses in examples and fixtures. Keep real mixer addresses, live profile exports and logs out of commits and issue attachments.
